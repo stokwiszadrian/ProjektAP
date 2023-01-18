@@ -1,9 +1,6 @@
 package pl.edu.ug.astokwisz.projektap.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -41,6 +38,7 @@ public class Item {
         this.id = id;
     }
 
+    @OneToOne
     public ItemType getItemType() {
         return itemType;
     }
@@ -81,6 +79,7 @@ public class Item {
         this.reservedTo = reservedTo;
     }
 
+    @ManyToOne
     public User getReservedBy() {
         return reservedBy;
     }

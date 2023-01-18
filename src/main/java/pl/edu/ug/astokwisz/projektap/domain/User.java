@@ -3,6 +3,8 @@ package pl.edu.ug.astokwisz.projektap.domain;
 import jakarta.persistence.*;
 import org.springframework.core.annotation.MergedAnnotation;
 
+import java.util.List;
+
 @Entity
 public class User {
     private long id;
@@ -15,6 +17,8 @@ public class User {
 
     private String pesel;
     private boolean isAdmin;
+
+    private List<Item> reservedItems;
 
     public User() {
     }
@@ -105,4 +109,9 @@ public class User {
     public void setPesel(String pesel) {
         this.pesel = pesel;
     }
+
+    @OneToMany(mappedBy = "user")
+    public List<Item> getReservedItems() { return reservedItems; }
+
+    public void setReservedItems(List<Item> reservedItems) { this.reservedItems = reservedItems; }
 }

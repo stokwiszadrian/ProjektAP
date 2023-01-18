@@ -5,7 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import pl.edu.ug.astokwisz.projektap.domain.User;
 import pl.edu.ug.astokwisz.projektap.service.UserService;
+
+import java.util.List;
+
 
 @RestController
 public class UserController {
@@ -19,5 +23,5 @@ public class UserController {
     User addUser(@RequestBody User user) { return userService.addUser(user); }
 
     @GetMapping("/api/user")
-    List<User> getAll() { return userService.getAllUsers() }
+    List<User> getAll() { return userService.getAllUsers(); }
 }

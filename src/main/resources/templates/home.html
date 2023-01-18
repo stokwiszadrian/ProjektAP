@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<form method="POST" th:action="@{/create}" th:object="${person}">
+    <div th:if="${#fields.hasErrors()}">
+        <span class="validationError">
+        Błędy formularza.
+        </span>
+    </div>
+    <label for="name">Imię: </label>
+    <input type="text" th:field="*{name}"/>
+    <br>
+    <label for="pesel">PESEL: </label>
+    <input type="text" th:field="*{pesel}"/>
+    <br>
+    <label for="age">Wiek: </label>
+    <input type="number" th:field="*{age}"/>
+    <br>
+    <label for="postalCode">Kod pocztowy: </label>
+    <input type="text" th:field="*{postalCode}"/>
+    <br>
+    <label for="incomes">Dochody: </label>
+    <input type="text" th:field="*{incomes}"/>
+    <br>
+    <label for="accept">Zapoznałem się z regulaminem </label>
+    <input type="checkbox" th:field="*{accept}"/>
+    <br>
+    <input type="submit" value="Submit"/>
+    <br>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('name')}"
+          th:errors="*{name}">Błąd
+    </span>
+    <br>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('pesel')}"
+          th:errors="*{pesel}">Błąd
+    </span>
+    <br>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('age')}"
+          th:errors="*{age}">Błąd
+    </span>
+    <br>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('postalCode')}"
+          th:errors="*{postalCode}">Błąd
+    </span>
+    <br>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('incomes')}"
+          th:errors="*{incomes}">Błąd
+    </span>
+    <br>
+    <span class="validationError"
+          th:if="${#fields.hasErrors('accept')}"
+          th:errors="*{accept}">Błąd
+    </span>
+</form>
+</body>
+</html>
