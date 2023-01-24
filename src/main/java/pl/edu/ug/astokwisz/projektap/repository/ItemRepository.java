@@ -11,11 +11,11 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends CrudRepository<Item, Long> {
 
-    List<Item> FindAllByItemtype (ItemType itemType);
+    List<Item> findByItemtype (ItemType itemtype);
 
-    List<Item> FindAllOrderByName();
+//    List<Item> FindAllByOrderByNameAsc();
 
-    List<Item> FindAllByReservedby(User reservedBy);
+//    List<Item> FindByReservedby(User reservedBy);
 
 
 }

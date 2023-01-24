@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class Item {
 
     private long id;
-    private ItemType itemType;
+    private ItemType itemtype;
     private String name;
     private float price;
     private LocalDate reservedFrom;
@@ -19,8 +19,8 @@ public class Item {
     public Item() {
     }
 
-    public Item(ItemType itemType, String name, float price, LocalDate reservedFrom, LocalDate reservedTo, User reservedBy) {
-        this.itemType = itemType;
+    public Item(ItemType itemtype, String name, float price, LocalDate reservedFrom, LocalDate reservedTo, User reservedBy) {
+        this.itemtype = itemtype;
         this.name = name;
         this.price = price;
         this.reservedFrom = reservedFrom;
@@ -39,12 +39,12 @@ public class Item {
     }
 
     @OneToOne
-    public ItemType getItemType() {
-        return itemType;
+    public ItemType getItemtype() {
+        return itemtype;
     }
 
-    public void setItemType(ItemType itemType) {
-        this.itemType = itemType;
+    public void setItemtype(ItemType itemtype) {
+        this.itemtype = itemtype;
     }
 
     public String getName() {

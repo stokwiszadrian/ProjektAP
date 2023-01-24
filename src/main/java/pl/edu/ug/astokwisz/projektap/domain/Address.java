@@ -12,10 +12,10 @@ public class Address {
     private String country;
     private String city;
     private String streetName;
-    private long streetNumber;
+    private String streetNumber;
     private String postalCode;
 
-    public Address(String country, String city, String streetName, long streetNumber, String postalCode) {
+    public Address(String country, String city, String streetName, String streetNumber, String postalCode) {
         this.country = country;
         this.city = city;
         this.streetName = streetName;
@@ -61,11 +61,11 @@ public class Address {
         this.streetName = streetName;
     }
 
-    public long getStreetNumber() {
+    public String getStreetNumber() {
         return streetNumber;
     }
 
-    public void setStreetNumber(long streetNumber) {
+    public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
     }
 
@@ -75,5 +75,17 @@ public class Address {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", streetName='" + streetName + '\'' +
+                ", streetNumber=" + streetNumber +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
     }
 }

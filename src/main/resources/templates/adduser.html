@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>New user</title>
+</head>
+<body>
+<form method="POST" th:action="@{/adduser}" th:object="${user}">
+    </div>
+    <label for="username">Nazwa użytkownika: </label>
+    <input type="text" th:field="*{username}"/>
+    <br>
+    <label for="password">Hasło: </label>
+    <input type="password" th:field="*{password}"/>
+    <br>
+    <label for="firstname">Imię: </label>
+    <input type="text" th:field="*{firstname}"/>
+    <br>
+    <label for="lastname">Nazwisko: </label>
+    <input type="text" th:field="*{lastname}"/>
+    <br>
+    <label for="phoneNumber">Numer telefonu: </label>
+    <input type="text" th:field="*{phoneNumber}"/>
+    <br>
+    <label for="pesel">Numer PESEL: </label>
+    <input type="text" th:field="*{pesel}"/>
+    <br>
+    <label for="address-country">Kraj: </label>
+    <input type="text" th:field="*{address.country}"/>
+    <br>
+    <label for="address-city">Miejscowość: </label>
+    <input type="text" th:field="*{address.city}"/>
+    <br>
+    <label for="address-streetName">Ulica: </label>
+    <input type="text" th:field="*{address.streetName}"/>
+    <br>
+    <label for="address-streetNumber">Numer ulicy: </label>
+    <input type="text" th:field="*{address.streetNumber}"/>
+    <br>
+    <label for="address-postalCode">Kod pocztowy: </label>
+    <input type="text" th:field="*{address.postalCode}"/>
+    <br>
+    <input type="submit" value="Submit"/>
+</form>
+</body>
+</html>

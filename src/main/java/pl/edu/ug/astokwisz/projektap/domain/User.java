@@ -1,8 +1,10 @@
 package pl.edu.ug.astokwisz.projektap.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 import org.springframework.core.annotation.MergedAnnotation;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -77,7 +79,7 @@ public class User {
         this.lastname = lastname;
     }
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     public Address getAddress() {
         return address;
     }
@@ -110,8 +112,24 @@ public class User {
         this.pesel = pesel;
     }
 
-    @OneToMany(mappedBy = "user")
-    public List<Item> getReservedItems() { return reservedItems; }
+    @OneToMany(mappedBy="reservedBy")
+    public Collection<Item> getReservedItems() { return reservedItems; }
 
     public void setReservedItems(List<Item> reservedItems) { this.reservedItems = reservedItems; }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", address=" + address +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", pesel='" + pesel + '\'' +
+                ", isAdmin=" + isAdmin +
+                ", reservedItems=" + reservedItems +
+                '}';
+    }
 }
