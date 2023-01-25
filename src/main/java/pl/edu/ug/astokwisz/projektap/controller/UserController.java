@@ -24,4 +24,14 @@ public class UserController {
 
     @GetMapping("/api/user")
     List<User> getAll() { return userService.getAllUsers(); }
+
+    @GetMapping
+    public String home() {
+        return "Home";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "Admin";
+    }
 }

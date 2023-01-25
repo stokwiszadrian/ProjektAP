@@ -18,16 +18,10 @@ public class PasswordValidator implements ConstraintValidator<PasswordValidation
         Matcher mUpperCase = upperCase.matcher(value);
         Matcher mDigits = digits.matcher(value);
         Matcher mSpecials = specials.matcher(value);
-        while (mUpperCase.find()) {
-            if (mUpperCase.group(1) == null) return false;
-        }
-        while (mDigits.find()) {
-            if (mDigits.group(1) == null) return false;
-        }
-        while (mSpecials.find()) {
-            if (mSpecials.group(1) == null) return false;
-        }
-        return true;
+        System.out.println(mSpecials);
+        if (!mUpperCase.find()) return false;
+        if (!mDigits.find()) return false;
+        return mSpecials.find();
     }
 
     public void initialize(PasswordValidation constraintAnnotation) {

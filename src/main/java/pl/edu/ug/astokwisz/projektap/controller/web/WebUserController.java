@@ -1,5 +1,6 @@
 package pl.edu.ug.astokwisz.projektap.controller.web;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,12 @@ public class WebUserController {
     }
 
     @PostMapping("/adduser")
-    public String addUser(User user, Errors errors) {
+    public String addUser(@Valid User user, Errors errors) {
+        if (errors.hasErrors()) {
+            System.out.println(errors.getAllErrors());
+            return "adduser";
+        }
+        System.out.println(errors);
         System.out.println(user);
         userService.addUser(user);
         return "redirect:/";

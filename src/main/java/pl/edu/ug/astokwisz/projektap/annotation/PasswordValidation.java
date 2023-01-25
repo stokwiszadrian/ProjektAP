@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PasswordValidator.class)
 public @interface PasswordValidation {
 
-    String message() default "Hasło musi zawierać minimum 10 znaków, w tym 1 wielką literę, 1 cyfrę oraz 1 znak specjalnu";
+    String message() default "Hasło musi zawierać minimum 10 znaków, w tym 1 wielką literę, 1 cyfrę oraz 1 znak specjalny";
 
     Class<?>[] groups() default {};
 

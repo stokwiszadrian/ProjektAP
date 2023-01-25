@@ -1,8 +1,17 @@
 package pl.edu.ug.astokwisz.projektap.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.validator.constraints.pl.PESEL;
 import org.springframework.core.annotation.MergedAnnotation;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import pl.edu.ug.astokwisz.projektap.annotation.PasswordValidation;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,32 +19,49 @@ import java.util.List;
 @Entity
 public class User {
     private long id;
+    @NotNull(message = "Pole wymagane")
+    @Size(min = 4, max = 20, message = "Nazwa użytkownika musi mieć mieć od 4 do 20 znaków")
     private String username;
+    @PasswordValidation
     private String password;
+    @Size(min = 1, message = "Pole wymagane")
+    @Pattern(regexp = "^\\p{L}[\\p{L}[:blank:]]+$", message = "Niepoprawne dane")
     private String firstname;
+    @Size(min = 1, message = "Pole wymagane")
+    @Pattern(regexp = "^\\p{L}[\\p{L}[:blank:]]+$", message = "Niepoprawne dane")
     private String lastname;
+
+    @Valid
     private Address address;
+    @Pattern(regexp = "[0-9]{9}", message = "Podany numer telefonu jest niepoprawny")
     private String phoneNumber;
 
+    @PESEL(message = "Niepoprawny numer PESEL")
     private String pesel;
-    private boolean isAdmin;
 
     private List<Item> reservedItems;
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
 
     public User() {
     }
 
-    public User(String username, String password, String firstname, String lastname, Address address, String phoneNumber, boolean isAdmin, String pesel) {
+    public User(String username, String password, String firstname, String lastname, Address address, String phoneNumber, String pesel) {
         this.username = username;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.isAdmin = isAdmin;
         this.pesel = pesel;
     }
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,14 +122,6 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
-
     public String getPesel() {
         return pesel;
     }
@@ -128,7 +146,6 @@ public class User {
                 ", address=" + address +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", pesel='" + pesel + '\'' +
-                ", isAdmin=" + isAdmin +
                 ", reservedItems=" + reservedItems +
                 '}';
     }

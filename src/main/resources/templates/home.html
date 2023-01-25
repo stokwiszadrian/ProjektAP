@@ -8,8 +8,17 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-    <div id="main">
-        Bonjour!
+    <div id="menu">
+        <ul>
+            <li>
+                <a href="/adduser">Dodaj użytkownika</a>
+            </li>
+        </ul>
+        <ul>
+            <li>
+                <a th:href="@{/adduser}">Dodaj użytkownika</a>
+            </li>
+        </ul>
     </div>
     <ul th:each="user : ${userList}">
         <li th:object="${user}">
