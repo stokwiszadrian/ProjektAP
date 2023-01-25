@@ -3,9 +3,12 @@ package pl.edu.ug.astokwisz.projektap.component;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import pl.edu.ug.astokwisz.projektap.domain.Address;
 import pl.edu.ug.astokwisz.projektap.domain.Privilege;
 import pl.edu.ug.astokwisz.projektap.domain.Role;
 import pl.edu.ug.astokwisz.projektap.domain.User;
@@ -33,8 +36,8 @@ public class SetupData implements
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -42,6 +45,7 @@ public class SetupData implements
 
         if (alreadySetup)
             return;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Privilege readPrivilege
                 = createPrivilegeIfNotFound("READ_PRIVILEGE");
         Privilege writePrivilege
@@ -50,16 +54,28 @@ public class SetupData implements
         List<Privilege> adminPrivileges = Arrays.asList(
                 readPrivilege, writePrivilege);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
+        createRoleIfNotFound("ROLE_USER", List.of(readPrivilege));
 
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-        User user = new User();
+        User user = new User(
+                "admin",
+                passwordEncoder.encode("password"),
+                "Jan",
+                "Nowak",
+                new Address(
+                        "Polska",
+                        "Tczew",
+                        "3 Maja",
+                        "13",
+                        "12",
+                        "12-345"
+                        ),
+                "999999999",
+                "00322000078");
         user.setFirstname("Test");
         user.setLastname("Test");
         user.setPassword(passwordEncoder.encode("test"));
-        user.setEmail("test@test.com");
-        user.setRoles(Arrays.asList(adminRole));
-        user.setEnabled(true);
+        Optional<Role> adminRole = roleRepository.findByName("ROLE_ADMIN");
+        adminRole.ifPresent(role -> user.setRoles(List.of(role)));
         userRepository.save(user);
 
         alreadySetup = true;
@@ -78,7 +94,7 @@ public class SetupData implements
     }
 
     @Transactional
-    Role createRoleIfNotFound(
+    void createRoleIfNotFound(
             String name, Collection<Privilege> privileges) {
 
         Optional<Role> role = roleRepository.findByName(name);
@@ -86,8 +102,7 @@ public class SetupData implements
             Role newRole = new Role(name);
             newRole.setPrivileges(privileges);
             roleRepository.save(newRole);
-            return newRole;
         }
-        return role.get();
+//        role.get();
     }
 }
