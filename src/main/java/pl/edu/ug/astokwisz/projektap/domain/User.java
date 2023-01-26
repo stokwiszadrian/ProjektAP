@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.hibernate.validator.constraints.pl.PESEL;
 import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,10 +20,12 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "users")
 public class User {
     private long id;
     @NotNull(message = "Pole wymagane")
     @Size(min = 4, max = 20, message = "Nazwa użytkownika musi mieć mieć od 4 do 20 znaków")
+    @Column(unique = true)
     private String username;
     @PasswordValidation
     private String password;

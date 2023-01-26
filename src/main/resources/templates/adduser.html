@@ -19,6 +19,9 @@
           th:if="${#fields.hasErrors('username')}"
           th:errors="*{username}">Błąd
     </span>
+    <span class="validationError"
+          th:if="${userExists}">Użytkownik o podanej nazwie już istnieje
+    </span>
     <br>
     <label for="password">Hasło: </label>
     <input type="password" th:field="*{password}"/>

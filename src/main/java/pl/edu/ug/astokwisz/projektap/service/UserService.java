@@ -2,6 +2,7 @@ package pl.edu.ug.astokwisz.projektap.service;
 
 import org.springframework.stereotype.Service;
 import pl.edu.ug.astokwisz.projektap.domain.User;
+import pl.edu.ug.astokwisz.projektap.error.UserAlreadyExistsException;
 import pl.edu.ug.astokwisz.projektap.repository.AddressRepository;
 import pl.edu.ug.astokwisz.projektap.repository.UserRepository;
 
@@ -19,7 +20,10 @@ public class UserService {
     }
 
     public User addUser(User user) {
-        return userRepository.save(user);
+        if (userExists(user.getUsername())) {
+            throw new UserAlreadyExistsException("User with a given username already exists: " + user.getUsername());
+        }
+        else return userRepository.save(user);
     }
 
     public Optional<User> getUserById(Long id) {
@@ -38,5 +42,10 @@ public class UserService {
 
     public List<User> getAllByFullname(String firstname, String lastname) {
         return userRepository.findByFirstnameAndLastname(firstname, lastname);
+    }
+
+    private boolean userExists(String username) {
+        Optional<User> user = userRepository.findUserByUsername(username);
+        return user.isPresent();
     }
 }

@@ -19,6 +19,10 @@ public class Privilege {
         this.name = name;
     }
 
+    public Privilege() {
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {

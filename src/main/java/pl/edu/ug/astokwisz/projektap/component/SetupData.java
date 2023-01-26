@@ -36,8 +36,8 @@ public class SetupData implements
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -45,7 +45,6 @@ public class SetupData implements
 
         if (alreadySetup)
             return;
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Privilege readPrivilege
                 = createPrivilegeIfNotFound("READ_PRIVILEGE");
         Privilege writePrivilege
@@ -56,9 +55,10 @@ public class SetupData implements
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", List.of(readPrivilege));
 
+        String encodedPass = passwordEncoder.encode("Password123!");
         User user = new User(
                 "admin",
-                passwordEncoder.encode("password"),
+                encodedPass,
                 "Jan",
                 "Nowak",
                 new Address(
@@ -71,9 +71,6 @@ public class SetupData implements
                         ),
                 "999999999",
                 "00322000078");
-        user.setFirstname("Test");
-        user.setLastname("Test");
-        user.setPassword(passwordEncoder.encode("test"));
         Optional<Role> adminRole = roleRepository.findByName("ROLE_ADMIN");
         adminRole.ifPresent(role -> user.setRoles(List.of(role)));
         userRepository.save(user);
