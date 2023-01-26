@@ -8,11 +8,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import pl.edu.ug.astokwisz.projektap.domain.Role;
 import pl.edu.ug.astokwisz.projektap.domain.User;
 import pl.edu.ug.astokwisz.projektap.error.UserAlreadyExistsException;
+import pl.edu.ug.astokwisz.projektap.service.RoleService;
 import pl.edu.ug.astokwisz.projektap.service.UserService;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class WebUserController {
@@ -22,7 +26,12 @@ public class WebUserController {
 
     private final UserService userService;
 
-    public WebUserController(@Autowired UserService userService) { this.userService = userService; }
+    private final RoleService roleService;
+
+    public WebUserController(@Autowired UserService userService, @Autowired RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
     @GetMapping("/")
     public String home(Model model) {
@@ -45,6 +54,8 @@ public class WebUserController {
             return "adduser";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Optional<Role> userRole = roleService.getRole("ROLE_USER");
+        userRole.ifPresent(role -> user.setRoles(List.of(role)));
         try {
             userService.addUser(user);
             return "redirect:/";
