@@ -30,6 +30,8 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public Optional<User> getUserByUsername(String username) { return userRepository.findUserByUsername(username); }
+
     public List<User> getAllUsers() { return (List<User>) userRepository.findAll(); }
 
     public void deleteUserById(Long id) {

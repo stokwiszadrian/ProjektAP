@@ -83,6 +83,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/").permitAll()
+                        .requestMatchers("/adduser").hasAuthority("ADD_PRIVILEGE")
                         .anyRequest().authenticated()
                 )
                 .formLogin()

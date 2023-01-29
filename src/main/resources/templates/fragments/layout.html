@@ -37,6 +37,9 @@
       <li sec:authorize="hasRole('ROLE_USER')">
         User can see this
       </li>
+      <li sec:authorize="isAuthenticated()">
+        <a th:href="@{/profile(id=${currentUserId})}">Profil</a>
+      </li>
     </ul>
   </div>
   <div id="content" th:fragment="content">
