@@ -11,24 +11,31 @@
 <body>
 <div id="main">
   <div id="header" th:fragment="header">
-    <h4 th:inline="text">
+    <h1 th:inline="text">
       Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!
-    </h4>
+    </h1>
   </div>
   <div id="menu" th:fragment="menu">
     <ul>
       <li>
         <a th:href="@{/adduser}">Dodaj użytkownika</a>
       </li>
-      <li>
+      <li sec:authorize="isAuthenticated()">
         <form th:action="@{/logout}" method="post">
           <input type="submit" value="Wyloguj" />
         </form>
       </li>
-      <li>
+      <li sec:authorize="!isAuthenticated()">
         <form th:action="@{/login}" method="post">
           <input type="submit" value="Zaloguj" />
         </form>
+      </li>
+      <li sec:authorize="hasRole('ROLE_ADMIN')">
+        Admin can see this
+
+      </li>
+      <li sec:authorize="hasRole('ROLE_USER')">
+        User can see this
       </li>
     </ul>
   </div>

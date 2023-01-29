@@ -71,9 +71,28 @@ public class SetupData implements
                         ),
                 "999999999",
                 "00322000078");
+
+        User defaultUser = new User(
+                "default",
+                encodedPass,
+                "Adam",
+                "Kowalski",
+                new Address(
+                        "Polska",
+                        "Tczew",
+                        "3 Maja",
+                        "13",
+                        "12",
+                        "12-345"
+                ),
+                "999999999",
+                "00322000078");
         Optional<Role> adminRole = roleRepository.findByName("ROLE_ADMIN");
         adminRole.ifPresent(role -> user.setRoles(List.of(role)));
+        Optional<Role> userRole = roleRepository.findByName("ROLE_USER");
+        userRole.ifPresent(role -> defaultUser.setRoles(List.of(role)));
         userRepository.save(user);
+        userRepository.save(defaultUser);
 
         alreadySetup = true;
     }
