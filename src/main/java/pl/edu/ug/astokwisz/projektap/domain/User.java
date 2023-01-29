@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import pl.edu.ug.astokwisz.projektap.annotation.PasswordValidation;
+import pl.edu.ug.astokwisz.projektap.validator.UserEditChecks;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,22 +30,22 @@ public class User {
     private String username;
     @PasswordValidation
     private String password;
-    @Size(min = 1, message = "Pole wymagane")
-    @Pattern(regexp = "^\\p{L}[\\p{L}[:blank:]]+$", message = "Niepoprawne dane")
+    @Size(min = 1, message = "Pole wymagane", groups = UserEditChecks.class)
+    @Pattern(regexp = "^\\p{L}[\\p{L}[:blank:]]+$", message = "Niepoprawne dane", groups = UserEditChecks.class)
     private String firstname;
-    @Size(min = 1, message = "Pole wymagane")
-    @Pattern(regexp = "^\\p{L}[\\p{L}[:blank:]]+$", message = "Niepoprawne dane")
+    @Size(min = 1, message = "Pole wymagane", groups = UserEditChecks.class)
+    @Pattern(regexp = "^\\p{L}[\\p{L}[:blank:]]+$", message = "Niepoprawne dane", groups = UserEditChecks.class)
     private String lastname;
 
     @Valid
     private Address address;
-    @Pattern(regexp = "[0-9]{9}", message = "Podany numer telefonu jest niepoprawny")
+    @Pattern(regexp = "[0-9]{9}", message = "Podany numer telefonu jest niepoprawny", groups = UserEditChecks.class)
     private String phoneNumber;
 
-    @PESEL(message = "Niepoprawny numer PESEL")
+    @PESEL(message = "Niepoprawny numer PESEL", groups = UserEditChecks.class)
     private String pesel;
 
-    private List<Item> reservedItems;
+    private Collection<Item> reservedItems;
 
 //    @JoinTable(
 //            name = "users_roles",

@@ -18,8 +18,8 @@
         Błędy formularza.
         </span>
             </div>
-            <label for="username">Nazwa użytkownika: </label>
-            <input type="text" th:field="*{username}"/>
+            <label th:if="${isEditForm} == null" for="username">Nazwa użytkownika: </label>
+            <input th:if="${isEditForm} == null" type="text" th:field="*{username}"/>
             <span class="validationError"
                   th:if="${#fields.hasErrors('username')}"
                   th:errors="*{username}">Błąd
@@ -28,7 +28,7 @@
                   th:if="${userExists}">Użytkownik o podanej nazwie już istnieje
     </span>
             <br>
-            <label for="password">Hasło: </label>
+            <label th:if="${isEditForm} == null" for="password">Hasło: </label>
             <input th:if="${isEditForm} == null" type="password" th:field="*{password}"/>
             <span class="validationError"
                   th:if="${#fields.hasErrors('password')}"

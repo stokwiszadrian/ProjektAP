@@ -16,6 +16,11 @@ public class UserService {
     final UserRepository userRepository;
     final AddressRepository addressRepository;
 
+    private boolean userExists(String username) {
+        Optional<User> user = userRepository.findUserByUsername(username);
+        return user.isPresent();
+    }
+
     public UserService(UserRepository userRepository, AddressRepository addressRepository) {
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
@@ -41,6 +46,8 @@ public class UserService {
     }
 
     public User updateUser(User user) {
+
+        System.out.println("SERVICE USER ID" + user.getId());
         return userRepository.save(user);
     }
 
@@ -48,8 +55,4 @@ public class UserService {
         return userRepository.findByFirstnameAndLastname(firstname, lastname);
     }
 
-    private boolean userExists(String username) {
-        Optional<User> user = userRepository.findUserByUsername(username);
-        return user.isPresent();
-    }
 }

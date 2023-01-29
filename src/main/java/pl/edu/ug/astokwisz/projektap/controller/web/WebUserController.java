@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pl.edu.ug.astokwisz.projektap.domain.Role;
 import pl.edu.ug.astokwisz.projektap.domain.User;
 import pl.edu.ug.astokwisz.projektap.error.UserAlreadyExistsException;
+import pl.edu.ug.astokwisz.projektap.service.AddressService;
 import pl.edu.ug.astokwisz.projektap.service.RoleService;
 import pl.edu.ug.astokwisz.projektap.service.UserService;
+import pl.edu.ug.astokwisz.projektap.validator.UserEditChecks;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +38,8 @@ public class WebUserController {
     private final UserService userService;
 
     private final RoleService roleService;
+
+    private final AddressService addressService;
 
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -52,9 +57,10 @@ public class WebUserController {
         }
     }
 
-    public WebUserController(@Autowired UserService userService, @Autowired RoleService roleService) {
+    public WebUserController(@Autowired UserService userService, @Autowired RoleService roleService, @Autowired AddressService addressService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.addressService = addressService;
     }
 
     @GetMapping("/")
@@ -129,7 +135,7 @@ public class WebUserController {
     }
 
     @GetMapping("/edituser")
-    public String editUserProfile(@RequestParam String id, Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
+    public String editUser(@RequestParam String id, Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
         if (user != null && user.getUsername() != null) {
             String loggedUsername = user.getUsername();
             Optional<User> currentUserOpt = userService.getUserById(Long.valueOf(id));
@@ -140,6 +146,8 @@ public class WebUserController {
                 if (Objects.equals(loggedUsername, currentUser.getUsername())) {
                     model.addAttribute("userToAdd", currentUser);
                     model.addAttribute("currentUser", currentUser);
+                    model.addAttribute("isEditForm", true);
+                    model.addAttribute("action", "/edituser?id=" + currentUser.getId());
                     return "adduser";
                 }
                 model.addAttribute("errorMessage", "Brak dostępu do danego profilu użytkownika.");
@@ -151,4 +159,36 @@ public class WebUserController {
         model.addAttribute("errorMessage", "Brak dostępu do danego profilu użytkownika.");
         return "error";
     }
+
+    @PostMapping("/edituser")
+    public String editUser(Model model, @Validated(UserEditChecks.class) @ModelAttribute("userToAdd") User user, Errors errors, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser, @RequestParam String id) {
+        addUserAttribute(authUser, model);
+        Optional<User> fillerUserOpt = userService.getUserById(Long.valueOf(id));
+        if (fillerUserOpt.isPresent()) {
+            User fillerUser = fillerUserOpt.get();
+            user.setUsername(fillerUser.getUsername());
+            user.setPassword(fillerUser.getPassword());
+            user.setReservedItems(fillerUser.getReservedItems());
+            user.setRoles(fillerUser.getRoles());
+            model.addAttribute("action", "/edituser?id=" + id);
+            model.addAttribute("isEditForm", true);
+            if (errors.hasErrors()) {
+                System.out.println("ERRORS: " + errors);
+                return "adduser";
+            }
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+            try {
+//                System.out.println(user);
+                userService.updateUser(user);
+                addressService.deleteAddressById(fillerUser.getAddress().getId());
+                return "redirect:/profile?id=" + id;
+            } catch (UserAlreadyExistsException userEx) {
+                model.addAttribute("userExists", true);
+                return "adduser";
+            }
+        }
+        return "redirect:/profile?id=" + id;
+    }
+
+
 }
