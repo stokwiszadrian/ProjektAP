@@ -14,6 +14,7 @@
   <div id="menu" th:replace="fragments/layout :: menu"></div>
   <div id="content" th:object="${currentUser}">
     <span th:text="*{username}">nazwa użytkownika</span>
+    <a th:href="@{/edituser(id=${currentUser.id})}">Edytuj profil</a>
   </div>
 </div>
 </body>

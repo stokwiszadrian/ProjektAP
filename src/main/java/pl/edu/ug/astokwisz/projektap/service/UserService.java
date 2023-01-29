@@ -1,6 +1,7 @@
 package pl.edu.ug.astokwisz.projektap.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.edu.ug.astokwisz.projektap.domain.User;
 import pl.edu.ug.astokwisz.projektap.error.UserAlreadyExistsException;
 import pl.edu.ug.astokwisz.projektap.repository.AddressRepository;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserService {
     final UserRepository userRepository;
     final AddressRepository addressRepository;

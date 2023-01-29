@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.edu.ug.astokwisz.projektap.domain.Role;
@@ -44,6 +45,13 @@ public class WebUserController {
         return authentication.isAuthenticated();
     }
 
+    private void addUserAttribute(org.springframework.security.core.userdetails.User user, Model model) {
+        if (user != null && user.getUsername() != null) {
+            Optional<User> userObjOpt = userService.getUserByUsername(user.getUsername());
+            userObjOpt.ifPresent(value -> model.addAttribute("currentUser", value));
+        }
+    }
+
     public WebUserController(@Autowired UserService userService, @Autowired RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
@@ -53,35 +61,36 @@ public class WebUserController {
     public String home(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
         List<User> userList = userService.getAllUsers();
         model.addAttribute("userList", userList);
-        if (user.getUsername() != null) {
-            Optional<User> userObjOpt = userService.getUserByUsername(user.getUsername());
-            userObjOpt.ifPresent(value -> model.addAttribute("currentUserId", value.getId()));
-        }
+        addUserAttribute(user, model);
         return "home";
     }
 
     @GetMapping("/login")
     public String getLoginPage(@RequestParam(name = "continue", required = false) String c) {
-        System.out.println(c);
         return "login";
     }
 
     @GetMapping("/adduser")
-    public String addUser(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
+    public String addUser(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
+        model.addAttribute("action", "adduser");
+        addUserAttribute(user, model);
+        model.addAttribute("userToAdd", new User());
         return "adduser";
     }
 
-    @GetMapping("/error")
-    public String errorPage() {
-        return "error";
-    }
+//    @GetMapping("/error")
+//    public String errorPage(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {;
+//        addUserAttribute(user, model);
+//        return "error";
+//    }
 
     @PostMapping("/adduser")
-    public String addUser(Model model, @Valid User user, Errors errors) {
+    public String addUser(Model model, @Valid @ModelAttribute("userToAdd") User user, Errors errors, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
+        addUserAttribute(authUser, model);
+        model.addAttribute("action", "/adduser");
+//        model.addAttribute("userToAdd", user);
         if (errors.hasErrors()) {
-            System.out.println(errors.getAllErrors());
+            System.out.println("ERRORS: " + errors);
             return "adduser";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -98,7 +107,7 @@ public class WebUserController {
 
     @GetMapping("/profile")
     public String getUserProfile(@RequestParam String id, Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
-        if (user.getUsername() != null) {
+        if (user != null && user.getUsername() != null) {
             String loggedUsername = user.getUsername();
             Optional<User> currentUserOpt = userService.getUserById(Long.valueOf(id));
 
@@ -108,6 +117,30 @@ public class WebUserController {
                 if (Objects.equals(loggedUsername, currentUser.getUsername())) {
                     model.addAttribute("currentUser", currentUser);
                     return "profile";
+                }
+                model.addAttribute("errorMessage", "Brak dostępu do danego profilu użytkownika.");
+                return "error";
+            }
+            model.addAttribute("errorMessage", "Użytkownik o podanym ID nie istnieje.");
+            return "error";
+        }
+        model.addAttribute("errorMessage", "Brak dostępu do danego profilu użytkownika.");
+        return "error";
+    }
+
+    @GetMapping("/edituser")
+    public String editUserProfile(@RequestParam String id, Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
+        if (user != null && user.getUsername() != null) {
+            String loggedUsername = user.getUsername();
+            Optional<User> currentUserOpt = userService.getUserById(Long.valueOf(id));
+
+            if (currentUserOpt.isPresent()) {
+                User currentUser = currentUserOpt.get();
+
+                if (Objects.equals(loggedUsername, currentUser.getUsername())) {
+                    model.addAttribute("userToAdd", currentUser);
+                    model.addAttribute("currentUser", currentUser);
+                    return "adduser";
                 }
                 model.addAttribute("errorMessage", "Brak dostępu do danego profilu użytkownika.");
                 return "error";

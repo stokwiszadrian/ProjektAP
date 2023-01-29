@@ -12,7 +12,7 @@
     <div id="header" th:replace="fragments/layout :: header"></div>
     <div id="menu" th:replace="fragments/layout :: menu"></div>
     <div id="content">
-        <form method="POST" th:action="@{/adduser}" th:object="${user}">
+        <form method="POST" th:action="@{${action}}" th:object="${userToAdd}">
             <div th:if="${#fields.hasErrors()}">
         <span class="validationError">
         Błędy formularza.
@@ -29,7 +29,7 @@
     </span>
             <br>
             <label for="password">Hasło: </label>
-            <input type="password" th:field="*{password}"/>
+            <input th:if="${isEditForm} == null" type="password" th:field="*{password}"/>
             <span class="validationError"
                   th:if="${#fields.hasErrors('password')}"
                   th:errors="*{password}">Błąd

@@ -81,9 +81,9 @@ public class SecurityConfig {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests( auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/adduser").hasAuthority("ADD_PRIVILEGE")
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/").permitAll()
+//                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/adduser").hasAuthority("READ_PRIVILEGE")
                         .anyRequest().authenticated()
                 )
                 .formLogin()
