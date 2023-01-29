@@ -8,18 +8,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import pl.edu.ug.astokwisz.projektap.component.CustomSimpleUrlAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -57,17 +56,42 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        FormLoginConfigurer formLoginConfigurer = new FormLoginConfigurer().
+//        return http
+//                .csrf().disable()
+//                .authorizeHttpRequests( auth -> auth
+//                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+//                        .requestMatchers("/").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .formLogin()
+//                    .loginPage("/login")
+//                    .loginProcessingUrl("/check_login")
+//                    .defaultSuccessUrl("/home.html", true)
+//                    .failureUrl("/login.html?error=true")
+//                    .failureHandler(authenticationFailureHandler())
+////                .successHandler(authenticationSuccessHandler())
+//                .and()
+//                .logout()
+//                    .logoutUrl("/logout")
+//                    .deleteCookies("JSESSIONID")
+//                    .logoutSuccessHandler(logoutSuccessHandler())
+//                    .permitAll()
+//                .and()
+//                .build();
         return http
                 .csrf().disable()
                 .authorizeHttpRequests( auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
+                .formLogin()
+                    .loginPage("/login")
+                    .permitAll()
+                    .and()
                 .logout()
-                .logoutSuccessUrl("/")
-                .permitAll()
-                .and()
+                    .permitAll()
+                    .and()
                 .build();
     }
 
@@ -78,6 +102,12 @@ public class SecurityConfig {
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new CustomSimpleUrlAuthenticationSuccessHandler();
+    }
+
 
 
 //    @Bean

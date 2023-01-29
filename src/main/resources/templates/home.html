@@ -6,40 +6,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
-    <h1 th:inline="text">
-    Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!
-    </h1>
-    <div id="menu">
-        <ul>
-            <li>
-                <a th:href="@{/adduser}">Dodaj użytkownika</a>
-            </li>
-            <li>
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Wyloguj" />
-                </form>
-            </li>
-            <li>
-                <form th:action="@{/login}" method="post">
-                    <input type="submit" value="Zaloguj" />
-                </form>
-            </li>
-        </ul>
+    <div id="main">
+        <div id="header" th:replace="fragments/layout :: header"></div>
+        <div id="menu" th:replace="fragments/layout :: menu"></div>
+        <div id="content">
+            <ul th:each="user : ${userList}">
+                <li th:object="${user}">
+                    <span th:text="*{username}"></span>,
+                    <span th:text="*{firstname}"></span>,
+                    <span th:text="*{lastname}"></span>,
+                    <span th:text="*{address.country}"></span>,
+                    <span th:text="*{address.city}"></span>,
+                    <span th:text="*{address.streetName}"></span>,
+                    <span th:text="*{address.streetNumber}"></span>,
+                    <span th:text="*{address.postalCode}"></span>,
+                </li>
+            </ul>
+        </div>
     </div>
-    <ul th:each="user : ${userList}">
-        <li th:object="${user}">
-            <span th:text="*{username}"></span>,
-            <span th:text="*{firstname}"></span>,
-            <span th:text="*{lastname}"></span>,
-            <span th:text="*{address.country}"></span>,
-            <span th:text="*{address.city}"></span>,
-            <span th:text="*{address.streetName}"></span>,
-            <span th:text="*{address.streetNumber}"></span>,
-            <span th:text="*{address.postalCode}"></span>,
-        </li>
-    </ul>
 </body>
 </html>

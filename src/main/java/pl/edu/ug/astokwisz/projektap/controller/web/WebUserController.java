@@ -2,12 +2,16 @@ package pl.edu.ug.astokwisz.projektap.controller.web;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.edu.ug.astokwisz.projektap.domain.Role;
 import pl.edu.ug.astokwisz.projektap.domain.User;
 import pl.edu.ug.astokwisz.projektap.error.UserAlreadyExistsException;
@@ -28,6 +32,15 @@ public class WebUserController {
 
     private final RoleService roleService;
 
+    private boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.
+                isAssignableFrom(authentication.getClass())) {
+            return false;
+        }
+        return authentication.isAuthenticated();
+    }
+
     public WebUserController(@Autowired UserService userService, @Autowired RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
@@ -38,6 +51,12 @@ public class WebUserController {
         List<User> userList = userService.getAllUsers();
         model.addAttribute("userList", userList);
         return "home";
+    }
+
+    @GetMapping("/login")
+    public String getLoginPage(@RequestParam(name = "continue", required = false) String c) {
+        System.out.println(c);
+        return "login";
     }
 
     @GetMapping("/adduser")
