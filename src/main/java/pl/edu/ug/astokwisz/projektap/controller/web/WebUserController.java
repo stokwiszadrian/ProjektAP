@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.edu.ug.astokwisz.projektap.domain.Item;
 import pl.edu.ug.astokwisz.projektap.domain.Role;
 import pl.edu.ug.astokwisz.projektap.domain.User;
 import pl.edu.ug.astokwisz.projektap.error.UserAlreadyExistsException;
 import pl.edu.ug.astokwisz.projektap.service.AddressService;
+import pl.edu.ug.astokwisz.projektap.service.ItemService;
 import pl.edu.ug.astokwisz.projektap.service.RoleService;
 import pl.edu.ug.astokwisz.projektap.service.UserService;
 import pl.edu.ug.astokwisz.projektap.validator.UserEditChecks;
@@ -41,6 +43,8 @@ public class WebUserController {
 
     private final AddressService addressService;
 
+    private final ItemService itemService;
+
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || AnonymousAuthenticationToken.class.
@@ -57,19 +61,66 @@ public class WebUserController {
         }
     }
 
-    public WebUserController(@Autowired UserService userService, @Autowired RoleService roleService, @Autowired AddressService addressService) {
+    public WebUserController(
+            @Autowired UserService userService,
+            @Autowired RoleService roleService,
+            @Autowired AddressService addressService,
+            @Autowired ItemService itemService) {
         this.userService = userService;
         this.roleService = roleService;
         this.addressService = addressService;
+        this.itemService = itemService;
     }
 
     @GetMapping("/")
     public String home(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
-        List<User> userList = userService.getAllUsers();
-        model.addAttribute("userList", userList);
+        List<Item> itemList = itemService.getAllItems();
+        model.addAttribute("itemList", itemList);
         addUserAttribute(user, model);
-        return "home";
+        return "itemlist";
     }
+
+    @GetMapping("/bookitem")
+    public String bookItemForm(@RequestParam String id, Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
+        addUserAttribute(user, model);
+        Optional<Item> currentItemOpt = itemService.getItemById(Long.valueOf(id));
+        if (currentItemOpt.isPresent()) {
+            Item currentItem = currentItemOpt.get();
+            model.addAttribute("bookedItem", currentItem);
+            model.addAttribute("action", "/bookitem?id=" + currentItem.getId());
+            return "bookitem";
+        }
+        model.addAttribute("errorMessage", "Dany przedmiot nie istnieje.");
+        return "error";
+
+
+    }
+
+    @PostMapping("/bookitem")
+    public String bookItemForm(@RequestParam String id, Model model, @ModelAttribute("bookedItem") Item item, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
+        addUserAttribute(user, model);
+        if (item.getReservedFrom().isAfter(item.getReservedTo())) {
+            model.addAttribute("errorMessage", "Podano zły zakres.");
+            return "error";
+        }
+        Optional<Item> fillerItemOpt = itemService.getItemById(Long.valueOf(id));
+        if (fillerItemOpt.isPresent()) {
+            Item fillerItem = fillerItemOpt.get();
+            item.setName(fillerItem.getName());
+            item.setPrice(fillerItem.getPrice());
+            item.setItemtype(fillerItem.getItemtype());
+            Optional<User> currentUserOpt = userService.getUserById(Long.valueOf(id));
+            currentUserOpt.ifPresent(item::setReservedBy);
+            itemService.updateItem(item);
+            return "redirect:/";
+        }
+        model.addAttribute("errorMessage", "Dany przedmiot nie istnieje.");
+        return "error";
+
+
+    }
+
+
 
     @GetMapping("/login")
     public String getLoginPage(@RequestParam(name = "continue", required = false) String c) {

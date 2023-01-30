@@ -46,8 +46,6 @@ public class UserService {
     }
 
     public User updateUser(User user) {
-
-        System.out.println("SERVICE USER ID" + user.getId());
         return userRepository.save(user);
     }
 

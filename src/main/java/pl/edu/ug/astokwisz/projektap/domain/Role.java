@@ -3,24 +3,20 @@ package pl.edu.ug.astokwisz.projektap.domain;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Collection;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Role {
     private Long id;
 
     private String name;
     private Collection<User> users;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "roles_privileges",
-//            joinColumns = @JoinColumn(
-//                    name = "role_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(
-//                    name = "privilege_id", referencedColumnName = "id"))
     private Collection<Privilege> privileges;
 
     public Role() {
@@ -37,7 +33,7 @@ public class Role {
         return this.id;
     }
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     public Collection<User> getUsers() {
         return this.users;
     }

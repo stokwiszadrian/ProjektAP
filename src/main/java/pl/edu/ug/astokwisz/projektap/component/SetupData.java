@@ -8,14 +8,10 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import pl.edu.ug.astokwisz.projektap.domain.Address;
-import pl.edu.ug.astokwisz.projektap.domain.Privilege;
-import pl.edu.ug.astokwisz.projektap.domain.Role;
-import pl.edu.ug.astokwisz.projektap.domain.User;
-import pl.edu.ug.astokwisz.projektap.repository.PrivilegeRepository;
-import pl.edu.ug.astokwisz.projektap.repository.RoleRepository;
-import pl.edu.ug.astokwisz.projektap.repository.UserRepository;
+import pl.edu.ug.astokwisz.projektap.domain.*;
+import pl.edu.ug.astokwisz.projektap.repository.*;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +31,10 @@ public class SetupData implements
 
     @Autowired
     private PrivilegeRepository privilegeRepository;
+    @Autowired
+    private ItemRepository itemRepository;
+    @Autowired
+    private ItemTypeRepository itemTypeRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -93,6 +93,30 @@ public class SetupData implements
         userRole.ifPresent(role -> defaultUser.setRoles(List.of(role)));
         userRepository.save(user);
         userRepository.save(defaultUser);
+
+        ItemType type1 = new ItemType("Narty");
+        ItemType type2 = new ItemType("Buty narciarskie");
+        ItemType type3 = new ItemType("Kaski narciarskie");
+
+        itemTypeRepository.saveAll(List.of(type1, type2, type3));
+
+        Item nartySalomon = new Item(
+              type1,
+              "Narty Salomon X-Max X12",
+                120.00F
+        );
+
+        Item butySalomon = new Item(
+                type2,
+                "Buty narciarskie Salomon S-Pro 100 20/21",
+                120.00F,
+                LocalDate.of(2022, 2, 11),
+                LocalDate.of(2023, 2, 18),
+                defaultUser
+
+        );
+
+        itemRepository.saveAll(List.of(nartySalomon, butySalomon));
 
         alreadySetup = true;
     }

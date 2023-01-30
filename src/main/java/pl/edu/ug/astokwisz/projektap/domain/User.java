@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.hibernate.validator.constraints.pl.PESEL;
@@ -13,6 +15,7 @@ import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import pl.edu.ug.astokwisz.projektap.annotation.PasswordValidation;
 import pl.edu.ug.astokwisz.projektap.validator.UserEditChecks;
 
@@ -20,7 +23,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
     private long id;
@@ -46,13 +50,6 @@ public class User {
     private String pesel;
 
     private Collection<Item> reservedItems;
-
-//    @JoinTable(
-//            name = "users_roles",
-//            joinColumns = @JoinColumn(
-//                    name = "user_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(
-//                    name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
     public User() {
@@ -73,89 +70,18 @@ public class User {
     public long getId() {
         return id;
     }
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.EAGER)
     public Collection<Role> getRoles() {
         return this.roles;
     }
-
-//    public void setId(long id) {
-//        this.id = id;
-//    }
-//
-//    public String getUsername() {
-//        return username;
-//    }
-//
-//    public void setUsername(String username) {
-//        this.username = username;
-//    }
-//
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
-//
-//    public String getFirstname() {
-//        return firstname;
-//    }
-//
-//    public void setFirstname(String firstname) {
-//        this.firstname = firstname;
-//    }
-//
-//    public String getLastname() {
-//        return lastname;
-//    }
-//
-//    public void setLastname(String lastname) {
-//        this.lastname = lastname;
-//    }
 
     @OneToOne(cascade = CascadeType.ALL)
     public Address getAddress() {
         return address;
     }
 
-//    public void setAddress(Address address) {
-//        this.address = address;
-//    }
-//
-//    public String getPhoneNumber() {
-//        return phoneNumber;
-//    }
-//
-//    public void setPhoneNumber(String phoneNumber) {
-//        this.phoneNumber = phoneNumber;
-//    }
-//
-//    public String getPesel() {
-//        return pesel;
-//    }
-//
-//    public void setPesel(String pesel) {
-//        this.pesel = pesel;
-//    }
-
-    @OneToMany(mappedBy="reservedBy")
+    @OneToMany(mappedBy="reservedBy", fetch = FetchType.EAGER)
     public Collection<Item> getReservedItems() { return reservedItems; }
 
-//    public void setReservedItems(List<Item> reservedItems) { this.reservedItems = reservedItems; }
-//
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "id=" + id +
-//                ", username='" + username + '\'' +
-//                ", password='" + password + '\'' +
-//                ", firstname='" + firstname + '\'' +
-//                ", lastname='" + lastname + '\'' +
-//                ", address=" + address +
-//                ", phoneNumber='" + phoneNumber + '\'' +
-//                ", pesel='" + pesel + '\'' +
-//                ", reservedItems=" + reservedItems +
-//                '}';
-//    }
 }

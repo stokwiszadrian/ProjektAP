@@ -4,8 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class ItemType {
     private long id;
     private String typeName;
@@ -23,15 +28,8 @@ public class ItemType {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public String toString() {
+        return this.typeName;
     }
 }
