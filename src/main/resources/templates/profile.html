@@ -15,6 +15,16 @@
   <div id="content" th:object="${currentUser}">
     <span th:text="*{username}">nazwa użytkownika</span>
     <a th:href="@{/edituser(id=${currentUser.id})}">Edytuj profil</a>
+    <ul th:each="item : *{reservedItems}">
+      <li>
+        <span th:text="${item.name}">name</span>,
+        <span th:text="${item.reservedFrom}"></span>,
+        <span th:text="${item.reservedTo}"></span>
+        <form th:action="@{/cancelreservation(id=${item.id})}" method="post">
+          <input type="submit" value="Anuluj rezerwację">
+        </form>
+      </li>
+    </ul>
   </div>
 </div>
 </body>

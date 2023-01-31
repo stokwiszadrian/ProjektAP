@@ -1,6 +1,9 @@
 package pl.edu.ug.astokwisz.projektap.controller.web;
 
 import jakarta.validation.Valid;
+import jakarta.validation.Validation;
+import jakarta.validation.groups.Default;
+import org.hibernate.validator.internal.engine.groups.DefaultValidationOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -26,6 +29,7 @@ import pl.edu.ug.astokwisz.projektap.service.RoleService;
 import pl.edu.ug.astokwisz.projektap.service.UserService;
 import pl.edu.ug.astokwisz.projektap.validator.UserEditChecks;
 
+import javax.swing.text.html.Option;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -109,7 +113,7 @@ public class WebUserController {
             item.setName(fillerItem.getName());
             item.setPrice(fillerItem.getPrice());
             item.setItemtype(fillerItem.getItemtype());
-            Optional<User> currentUserOpt = userService.getUserById(Long.valueOf(id));
+            Optional<User> currentUserOpt = userService.getUserByUsername(user.getUsername());
             currentUserOpt.ifPresent(item::setReservedBy);
             itemService.updateItem(item);
             return "redirect:/";
@@ -142,7 +146,7 @@ public class WebUserController {
 //    }
 
     @PostMapping("/adduser")
-    public String addUser(Model model, @Valid @ModelAttribute("userToAdd") User user, Errors errors, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
+    public String addUser(Model model, @Validated({Default.class, UserEditChecks.class}) @ModelAttribute("userToAdd") User user, Errors errors, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
         addUserAttribute(authUser, model);
         model.addAttribute("action", "/adduser");
 //        model.addAttribute("userToAdd", user);
@@ -241,5 +245,24 @@ public class WebUserController {
         return "redirect:/profile?id=" + id;
     }
 
+    @PostMapping("/cancelreservation")
+    public String cancelReservation(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser, @RequestParam String id) {
+        addUserAttribute(authUser, model);
+        Optional<Item> itemOpt = itemService.getItemById(Long.valueOf(id));
+        if (itemOpt.isPresent()) {
+            Item item = itemOpt.get();
+            item.setReservedBy(null);
+            item.setReservedFrom(null);
+            item.setReservedTo(null);
+            itemService.updateItem(item);
+            Optional<User> curUserOpt = userService.getUserByUsername(authUser.getUsername());
+            if (curUserOpt.isPresent()) {
+                User curUser = curUserOpt.get();
+                return "redirect:/profile?id=" + curUser.getId();
+            }
+        }
+        model.addAttribute("errorMessage", "Nie udało się anulować rezerwacji - dany przedmiot nie istnieje.");
+        return "error";
+    }
 
 }
