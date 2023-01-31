@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div id="main">
+  <div id="header" th:replace="fragments/layout :: header"></div>
+  <div id="menu" th:replace="fragments/layout :: menu"></div>
+  <div id="content">
+    <ul>
+      <li>
+        <a th:href="@{/adminpage/items}">Zarządzaj przedmiotami</a>
+      </li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

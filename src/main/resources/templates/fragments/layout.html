@@ -17,6 +17,9 @@
   </div>
   <div id="menu" th:fragment="menu">
     <ul>
+      <li>
+        <a th:href="@{/}">Strona główna</a>
+      </li>
       <li sec:authorize="!isAuthenticated()">
         <a th:href="@{/adduser}">Zarejestruj się</a>
       </li>
@@ -40,6 +43,9 @@
       </li>
       <li sec:authorize="isAuthenticated()">
         <a th:href="@{/profile(id=${currentUser.id})}">Profil</a>
+      </li>
+      <li sec:authorize="hasRole('ROLE_ADMIN')">
+        <a th:href="@{/adminpage}">Panel administracyjny</a>
       </li>
     </ul>
   </div>

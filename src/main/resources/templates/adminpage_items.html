@@ -5,7 +5,7 @@
 >
 <head>
   <meta charset="UTF-8">
-  <title>Home</title>
+  <title>Przedmioty</title>
   <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
@@ -13,6 +13,7 @@
   <div id="header" th:replace="fragments/layout :: header"></div>
   <div id="menu" th:replace="fragments/layout :: menu"></div>
   <div id="content">
+    <a th:href="@{/adminpage/additem}">Dodaj nowy przedmiot</a>
     <ul th:each="item : ${itemList}">
       <li th:object="${item}">
         <span th:text="*{itemtype.typeName}"></span>,
@@ -22,7 +23,10 @@
         <span th:text="*{reservedTo}?: 'Brak rezerwacji'"></span>,
         <span th:text="*{reservedBy != null} ? *{reservedBy.username} : 'Brak rezerwacji'"></span>,
         <span th:text="*{available()}"></span>
-        <a sec:authorize="isAuthenticated()" th:if="*{available()}" th:href="@{/bookitem(id=*{id})}">Zarezerwuj</a>
+        <form th:action="@{/adminpage/deleteitem(id=*{id})}" method="post">
+          <input type="submit" value="Usuń przedmiot">
+        </form>
+<!--        <a sec:authorize="isAuthenticated()" th:if="*{available()}" th:href="@{/bookitem(id=*{id})}">Zarezerwuj</a>-->
       </li>
     </ul>
   </div>

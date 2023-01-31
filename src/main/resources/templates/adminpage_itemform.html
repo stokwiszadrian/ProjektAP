@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Dodaj przedmiot</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div id="main">
+  <div id="header" th:replace="fragments/layout :: header"></div>
+  <div id="menu" th:replace="fragments/layout :: menu"></div>
+  <div id="content">
+    <form method="POST" th:action="@{${action}}" th:object="${itemToAdd}">
+      <div th:if="${#fields.hasErrors()}">
+        <span class="validationError">
+        Błędy formularza.
+        </span>
+      </div>
+      <label for="itemtype">Rodzaj przedmiotu: </label>
+      <select th:field="*{itemtype}">
+        <option th:each="type : ${itemTypes}"
+                th:value="${type.id}"
+                th:text="${type.typeName}">
+          itemtype
+        </option>
+      </select>
+      <span class="validationError"
+            th:if="${#fields.hasErrors('itemtype')}"
+            th:errors="*{itemtype}">Błąd
+      </span>
+        <br>
+        <label for="name">Nazwa przedmiotu: </label>
+        <input type="text" th:field="*{name}"/>
+        <span class="validationError"
+              th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}">Błąd
+      </span>
+        <br>
+        <label for="price">Cena: </label>
+        <input type="number" step="0.01" min="0" th:field="*{price}"/>
+        <span class="validationError"
+              th:if="${#fields.hasErrors('price')}"
+              th:errors="*{price}">Błąd
+      </span>
+        <br>
+      <input type="submit" value="Submit"/>
+    </form>
+  </div>
+</div>
+</body>
+</html>

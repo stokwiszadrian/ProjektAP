@@ -20,13 +20,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.edu.ug.astokwisz.projektap.domain.Item;
+import pl.edu.ug.astokwisz.projektap.domain.ItemType;
 import pl.edu.ug.astokwisz.projektap.domain.Role;
 import pl.edu.ug.astokwisz.projektap.domain.User;
 import pl.edu.ug.astokwisz.projektap.error.UserAlreadyExistsException;
-import pl.edu.ug.astokwisz.projektap.service.AddressService;
-import pl.edu.ug.astokwisz.projektap.service.ItemService;
-import pl.edu.ug.astokwisz.projektap.service.RoleService;
-import pl.edu.ug.astokwisz.projektap.service.UserService;
+import pl.edu.ug.astokwisz.projektap.service.*;
 import pl.edu.ug.astokwisz.projektap.validator.UserEditChecks;
 
 import javax.swing.text.html.Option;
@@ -49,6 +47,8 @@ public class WebUserController {
 
     private final ItemService itemService;
 
+    private final ItemTypeService itemTypeService;
+
     private boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || AnonymousAuthenticationToken.class.
@@ -69,11 +69,13 @@ public class WebUserController {
             @Autowired UserService userService,
             @Autowired RoleService roleService,
             @Autowired AddressService addressService,
-            @Autowired ItemService itemService) {
+            @Autowired ItemService itemService,
+            @Autowired ItemTypeService itemTypeService) {
         this.userService = userService;
         this.roleService = roleService;
         this.addressService = addressService;
         this.itemService = itemService;
+        this.itemTypeService = itemTypeService;
     }
 
     @GetMapping("/")
@@ -264,5 +266,50 @@ public class WebUserController {
         model.addAttribute("errorMessage", "Nie udało się anulować rezerwacji - dany przedmiot nie istnieje.");
         return "error";
     }
+
+    @GetMapping("/adminpage")
+    public String getAdminPage(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
+        addUserAttribute(authUser, model);
+        return "adminpage";
+    }
+
+    @GetMapping("/adminpage/items")
+    public String getAdminPageItems(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
+        addUserAttribute(authUser, model);
+        List<Item> itemList = itemService.getAllItems();
+        model.addAttribute("itemList", itemList);
+        return "adminpage_items";
+    }
+
+    @PostMapping("/adminpage/deleteitem")
+    public String deleteItem(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser, @RequestParam String id) {
+        addUserAttribute(authUser, model);
+        itemService.deleteById(Long.valueOf(id));
+        return "redirect:/adminpage/items";
+    }
+
+    @GetMapping("/adminpage/additem")
+    public String addItem(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
+        addUserAttribute(authUser, model);
+        Item itemToAdd = new Item();
+        model.addAttribute("itemToAdd", itemToAdd);
+        List<ItemType> itemTypes = itemTypeService.getAllItemTypes();
+        model.addAttribute("itemTypes", itemTypes);
+        model.addAttribute("action", "/adminpage/additem");
+        return "adminpage_itemform";
+    }
+
+    @PostMapping("/adminpage/additem")
+    public String addItem(Model model, @Valid @ModelAttribute("itemToAdd") Item item, Errors errors, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
+        addUserAttribute(authUser, model);
+        model.addAttribute("action", "/adminpage/additem");
+        if (errors.hasErrors()) {
+            return "adminpage_itemform";
+        }
+        itemService.updateItem(item);
+        return "redirect:/adminpage/items";
+
+    }
+
 
 }
