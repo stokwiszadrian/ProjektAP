@@ -17,6 +17,9 @@
       <li>
         <a th:href="@{/adminpage/items}">Zarządzaj przedmiotami</a>
       </li>
+      <li>
+        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/adminpage/users}">Zarządzaj użytkownikami</a>
+      </li>
     </ul>
   </div>
 </div>

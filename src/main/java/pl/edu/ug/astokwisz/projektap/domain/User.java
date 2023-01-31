@@ -81,7 +81,7 @@ public class User {
         return address;
     }
 
-    @OneToMany(mappedBy="reservedBy", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="reservedBy", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     public Collection<Item> getReservedItems() { return reservedItems; }
 
 }

@@ -3,6 +3,7 @@ package pl.edu.ug.astokwisz.projektap.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.ug.astokwisz.projektap.domain.Item;
+import pl.edu.ug.astokwisz.projektap.domain.User;
 import pl.edu.ug.astokwisz.projektap.repository.ItemRepository;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public class ItemService {
     public List<Item> getAllItems() { return (List<Item>) itemRepository.findAll(); }
 
     public Item updateItem(Item item) { return itemRepository.save(item); }
+
+    public List<Item> getItemsByUser(User user) { return itemRepository.findByReservedBy(user); }
 }

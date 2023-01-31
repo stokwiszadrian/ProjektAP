@@ -73,7 +73,7 @@ public class SetupData implements
                 "00322000078");
 
         User defaultUser = new User(
-                "default",
+                "user123",
                 encodedPass,
                 "Adam",
                 "Kowalski",
@@ -87,12 +87,18 @@ public class SetupData implements
                 ),
                 "999999999",
                 "00322000078");
-        Optional<Role> adminRole = roleRepository.findByName("ROLE_ADMIN");
-        adminRole.ifPresent(role -> user.setRoles(List.of(role)));
-        Optional<Role> userRole = roleRepository.findByName("ROLE_USER");
-        userRole.ifPresent(role -> defaultUser.setRoles(List.of(role)));
-        userRepository.save(user);
+        Optional<Role> adminRoleOpt = roleRepository.findByName("ROLE_ADMIN");
+        if (adminRoleOpt.isPresent()) {
+            Role adminRole = adminRoleOpt.get();
+            Optional<Role> userRoleOpt = roleRepository.findByName("ROLE_USER");
+            if (userRoleOpt.isPresent()) {
+                Role userRole = userRoleOpt.get();
+                defaultUser.setRoles(List.of(userRole));
+                user.setRoles(List.of(userRole, adminRole));
+            }
+        }
         userRepository.save(defaultUser);
+        userRepository.save(user);
 
         ItemType type1 = new ItemType("Narty");
         ItemType type2 = new ItemType("Buty narciarskie");

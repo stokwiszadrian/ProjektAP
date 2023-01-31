@@ -5,24 +5,35 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
+import org.thymeleaf.extras.springsecurity6.util.SpringSecurityVersionUtils;
 import pl.edu.ug.astokwisz.projektap.component.CustomSimpleUrlAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+//@EnableMethodSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -55,35 +66,14 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        FormLoginConfigurer formLoginConfigurer = new FormLoginConfigurer().
-//        return http
-//                .csrf().disable()
-//                .authorizeHttpRequests( auth -> auth
-//                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-//                        .requestMatchers("/").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin()
-//                    .loginPage("/login")
-//                    .loginProcessingUrl("/check_login")
-//                    .defaultSuccessUrl("/home.html", true)
-//                    .failureUrl("/login.html?error=true")
-//                    .failureHandler(authenticationFailureHandler())
-////                .successHandler(authenticationSuccessHandler())
-//                .and()
-//                .logout()
-//                    .logoutUrl("/logout")
-//                    .deleteCookies("JSESSIONID")
-//                    .logoutSuccessHandler(logoutSuccessHandler())
-//                    .permitAll()
-//                .and()
-//                .build();
+
         return http
                 .csrf().disable()
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/", "/adduser").permitAll()
 //                        .requestMatchers("/").permitAll()
                         .requestMatchers("/adminpage/**").hasRole("ADMIN")
+                                .requestMatchers("/adminpage/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin()
@@ -96,25 +86,26 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_ADMIN > ROLE_STAFF \n ROLE_STAFF > ROLE_USER";
-        roleHierarchy.setHierarchy(hierarchy);
-        return roleHierarchy;
-    }
+//    @Bean
+//    public RoleHierarchy roleHierarchy() {
+//        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+//        String hierarchy = "ROLE_ADMIN > ROLE_STAFF \n ROLE_STAFF > ROLE_USER";
+//        roleHierarchy.setHierarchy(hierarchy);
+//        System.out.println("ROLE HIERARCHY" + roleHierarchy);
+//        System.out.println("VERSION: " + SpringSecurityVersionUtils.getSpringSecurityVersionMajor() + " " + SpringSecurityVersionUtils.getSpringSecurityVersionMinor());
+//        return roleHierarchy;
+//    }
+
+//    @Bean
+//    public RoleHierarchyVoter hierarchyVoter() {
+//        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+//        hierarchy.setHierarchy("ROLE_ADMIN > ROLE_STAFF\n" +
+//                "ROLE_STAFF > ROLE_USER");
+//        return new RoleHierarchyVoter(hierarchy);
+//    }
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new CustomSimpleUrlAuthenticationSuccessHandler();
     }
-
-
-
-//    @Bean
-//    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
-//        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
-//        expressionHandler.setRoleHierarchy(roleHierarchy());
-//        return expressionHandler;
-//    }
 }

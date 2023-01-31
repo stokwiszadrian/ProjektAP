@@ -274,7 +274,7 @@ public class WebUserController {
     }
 
     @GetMapping("/adminpage/items")
-    public String getAdminPageItems(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
+    public String adminPageItems(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
         addUserAttribute(authUser, model);
         List<Item> itemList = itemService.getAllItems();
         model.addAttribute("itemList", itemList);
@@ -331,6 +331,33 @@ public class WebUserController {
 
     }
 
+    @GetMapping("/adminpage/users")
+    public String adminPageUsers(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
+        addUserAttribute(authUser, model);
+        List<User> userList = userService.getAllUsers();
+        model.addAttribute("userList", userList);
+        return "adminpage_users";
+    }
+
+    @PostMapping("/adminpage/deleteuser")
+    public String deleteUser(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser, @RequestParam String id) {
+        addUserAttribute(authUser, model);
+        Optional<User> userToDeleteOpt = userService.getUserById(Long.valueOf(id));
+        if (userToDeleteOpt.isPresent()) {
+            User userToDelete = userToDeleteOpt.get();
+            List<Item> userBookedItems = itemService.getItemsByUser(userToDelete);
+            for (Item item : userBookedItems) {
+                item.setReservedBy(null);
+                item.setReservedFrom(null);
+                item.setReservedTo(null);
+                itemService.updateItem(item);
+            }
+            userService.deleteUserById(Long.valueOf(id));
+            return "redirect:/adminpage/users";
+        }
+        model.addAttribute("errorMessage", "Użytkownik o podanym ID nie istnieje.");
+        return "error";
+    }
 
 
 

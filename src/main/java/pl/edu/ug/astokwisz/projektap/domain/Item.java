@@ -63,7 +63,7 @@ public class Item {
         return itemtype;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REFRESH)
     public User getReservedBy() {
         return reservedBy;
     }
