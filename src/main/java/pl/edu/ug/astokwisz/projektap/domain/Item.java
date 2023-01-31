@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.cglib.core.Local;
@@ -21,11 +22,12 @@ public class Item {
     private ItemType itemtype;
     
     @NotNull
+    @Size(min = 1, message = "Pole wymagane")
     private String name;
     
     @NotNull
 //    @Digits(fraction = 2, message = "Cena powinna zawierać 2 miejsca po przecinku", integer = 6)
-    @Min(value = 0)
+    @Min(value = 1, message = "Cena nie może być mniejsza od 1.")
     private float price;
     private LocalDate reservedFrom;
     private LocalDate reservedTo;
@@ -66,10 +68,6 @@ public class Item {
         return reservedBy;
     }
 
-    public String toString() {
-        return this.name;
-    }
-
     public String minReservedString() {
         return LocalDate.now().toString();
     }
@@ -82,4 +80,16 @@ public class Item {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", itemtype=" + itemtype +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", reservedFrom=" + reservedFrom +
+                ", reservedTo=" + reservedTo +
+                ", reservedBy=" + reservedBy +
+                '}';
+    }
 }

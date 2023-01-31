@@ -18,13 +18,22 @@
         Błędy formularza.
         </span>
       </div>
+      <input type="text" name="id" th:field="*{id}" hidden="hidden" />
       <label for="itemtype">Rodzaj przedmiotu: </label>
-      <select th:field="*{itemtype}">
+      <select name="itemtype">
+<!--        <option th:each="type : ${itemTypes}"-->
+<!--                th:value="${type.id}"-->
+<!--                th:text="${type.typeName}"-->
+<!--                th:selected="(${type.id} == ${itemToAdd.itemtype.id})">-->
+<!--          itemtype-->
+<!--        </option>-->
         <option th:each="type : ${itemTypes}"
                 th:value="${type.id}"
-                th:text="${type.typeName}">
+                th:text="${type.typeName}"
+                th:selected="(${type.id} == *{itemtype.id})">
           itemtype
         </option>
+        <option value="4"}>Kek</option>
       </select>
       <span class="validationError"
             th:if="${#fields.hasErrors('itemtype')}"

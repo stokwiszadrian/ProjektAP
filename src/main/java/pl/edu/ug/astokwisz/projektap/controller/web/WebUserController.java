@@ -299,17 +299,39 @@ public class WebUserController {
         return "adminpage_itemform";
     }
 
+    @GetMapping("/adminpage/edititem")
+    public String editItem(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser, @RequestParam String id) {
+        addUserAttribute(authUser, model);
+        Optional<Item> itemToAddOpt = itemService.getItemById(Long.valueOf(id));
+        if (itemToAddOpt.isPresent()) {
+            Item itemToAdd = itemToAddOpt.get();
+            model.addAttribute("itemToAdd", itemToAdd);
+            List<ItemType> itemTypes = itemTypeService.getAllItemTypes();
+            model.addAttribute("itemTypes", itemTypes);
+            model.addAttribute("action", "/adminpage/additem");
+            return "adminpage_itemform";
+        }
+        model.addAttribute("errorMessage", "Przedmiot o podanym ID nie istnieje.");
+        return "error";
+    }
+
     @PostMapping("/adminpage/additem")
     public String addItem(Model model, @Valid @ModelAttribute("itemToAdd") Item item, Errors errors, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
         addUserAttribute(authUser, model);
-        model.addAttribute("action", "/adminpage/additem");
+        System.out.println(item);
         if (errors.hasErrors()) {
+            model.addAttribute("action", "/adminpage/additem");
+            List<ItemType> itemTypes = itemTypeService.getAllItemTypes();
+            model.addAttribute("itemTypes", itemTypes);
             return "adminpage_itemform";
         }
+//        item.setId(Long.valueOf());
         itemService.updateItem(item);
         return "redirect:/adminpage/items";
 
     }
+
+
 
 
 }
