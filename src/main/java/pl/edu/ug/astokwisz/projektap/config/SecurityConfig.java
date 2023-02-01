@@ -70,7 +70,7 @@ public class SecurityConfig {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests( auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/", "/adduser").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/", "/adduser/**", "/itemfilter/**").permitAll()
 //                        .requestMatchers("/").permitAll()
                         .requestMatchers("/adminpage/**").hasRole("ADMIN")
                                 .requestMatchers("/adminpage/users/**").hasRole("ADMIN")

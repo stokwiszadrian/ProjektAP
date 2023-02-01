@@ -129,11 +129,17 @@ public class WebUserController {
     }
 
     @PostMapping("/bookitem")
-    public String bookItemForm(@RequestParam String id, Model model, @ModelAttribute("bookedItem") Item item, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
+    public String bookItemForm(@RequestParam String id, Model model, @ModelAttribute("action") String action, @ModelAttribute("bookedItem") Item item, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
         addUserAttribute(user, model);
         if (item.getReservedFrom().isAfter(item.getReservedTo())) {
             model.addAttribute("errorMessage", "Podano zły zakres.");
-            return "error";
+            model.addAttribute("action", action);
+            Optional<Item> currentItemOpt = itemService.getItemById(Long.valueOf(id));
+            if (currentItemOpt.isPresent()) {
+                Item currentItem = currentItemOpt.get();
+                model.addAttribute("bookedItem", currentItem);
+                return "bookitem";
+            }
         }
         Optional<Item> fillerItemOpt = itemService.getItemById(Long.valueOf(id));
         if (fillerItemOpt.isPresent()) {
@@ -144,7 +150,8 @@ public class WebUserController {
             Optional<User> currentUserOpt = userService.getUserByUsername(user.getUsername());
             currentUserOpt.ifPresent(item::setReservedBy);
             itemService.updateItem(item);
-            return "redirect:/";
+            model.addAttribute("bookedItem", item);
+            return "bookitem_success";
         }
         model.addAttribute("errorMessage", "Dany przedmiot nie istnieje.");
         return "error";
@@ -187,7 +194,7 @@ public class WebUserController {
         userRole.ifPresent(role -> user.setRoles(List.of(role)));
         try {
             userService.addUser(user);
-            return "redirect:/";
+            return "adduser_success";
         } catch (UserAlreadyExistsException userEx) {
             model.addAttribute("userExists", true);
             return "adduser";

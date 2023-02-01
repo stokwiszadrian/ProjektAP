@@ -13,16 +13,34 @@
   <div id="header" th:replace="fragments/layout :: header"></div>
   <div id="menu" th:replace="fragments/layout :: menu"></div>
   <div id="content" th:object="${currentUser}">
-    <span th:text="*{username}">nazwa użytkownika</span>
     <a th:href="@{/edituser(id=${currentUser.id})}">Edytuj profil</a>
-    <ul th:each="item : *{reservedItems}">
+    <ul>
+      <li th:text="*{username}"></li>
+      <li th:text="*{firstname}"></li>
+      <li th:text="*{lastname}"></li>
+      <li th:text="*{phoneNumber}"></li>
+      <li th:text="*{pesel}"></li>
+      <li>Dane adresowe</li>
       <li>
-        <span th:text="${item.name}">name</span>,
-        <span th:text="${item.reservedFrom}"></span>,
-        <span th:text="${item.reservedTo}"></span>
-        <form th:action="@{/cancelreservation(id=${item.id})}" method="post">
-          <input type="submit" value="Anuluj rezerwację">
-        </form>
+        <ul>
+          <li th:text="*{address.country}"></li>
+          <li th:text="'Ul. ' + *{address.streetName} + ' ' + *{address.streetNumber} + ' , m. ' + *{address.apartmentNumber}"></li>
+          <li th:text="*{address.postalCode} + ' ' + *{address.city}"></li>
+        </ul>
+      </li>
+      <br/>
+      <li>Zarezerwowane przedmioty:</li>
+      <li>
+        <ul th:each="item : *{reservedItems}">
+          <li>
+            <span th:text="${item.name}">name</span>,
+            <span th:text="${item.reservedFrom}"></span>,
+            <span th:text="${item.reservedTo}"></span>
+            <form th:action="@{/cancelreservation(id=${item.id})}" method="post">
+              <input type="submit" value="Anuluj rezerwację">
+            </form>
+          </li>
+        </ul>
       </li>
     </ul>
   </div>

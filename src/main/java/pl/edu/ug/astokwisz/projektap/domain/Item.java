@@ -1,13 +1,11 @@
 package pl.edu.ug.astokwisz.projektap.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.cglib.core.Local;
+import pl.edu.ug.astokwisz.projektap.validator.ItemReservation;
 
 import java.time.LocalDate;
 
@@ -92,4 +90,9 @@ public class Item {
                 ", reservedBy=" + reservedBy +
                 '}';
     }
+
+//    @AssertTrue(message = "Podano zły zakres", groups = ItemReservation.class)
+//    public boolean isDateRangeCorrect() {
+//        return reservedTo.isAfter(reservedFrom) || reservedTo.isEqual(reservedFrom);
+//    }
 }

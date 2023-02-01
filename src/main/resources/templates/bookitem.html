@@ -13,6 +13,7 @@
   <div id="header" th:replace="fragments/layout :: header"></div>
   <div id="menu" th:replace="fragments/layout :: menu"></div>
   <div id="content">
+    <span th:text="${errorMessage}"></span>
     <form method="POST" th:action="@{${action}}" th:object="${bookedItem}">
       <label for="reservedFrom">Początek rezerwacji</label>
       <input type="date" th:field="*{reservedFrom}" th:min="*{minReservedString()}"/>
