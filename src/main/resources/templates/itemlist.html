@@ -14,37 +14,52 @@
   <div id="menu" th:replace="fragments/layout :: menu"></div>
   <div id="content">
     <form id="filter" th:action="@{/itemfilter}" th:object="${itemFilter}" method="post">
-      Rodzaj przedmiotu:
-      <select name="itemtype">
-        <option th:each="type : ${itemTypes}"
-                th:value="${type.id}"
-                th:text="${type.typeName}"
-                th:selected="*{itemtype} != null and ${type.id} == *{itemtype.id}">
-          itemtype
-        </option>
-        <option th:value="null" th:selected="*{itemtype} == null">Wszystkie</option>
-      </select>
-      <span>Przedział cenowy</span>
-      <label for="minPrice">Od:</label>
-      <input type="number" th:field="*{minPrice}" step="0.01" min="0">
-      <label for="maxPrice">Do:</label>
-      <input type="number" th:field="*{maxPrice}" step="0.01" min="0">
-      <select name="orderBy">
-        <option th:each="ordertype : ${orderList}"
-                th:value="${ordertype[0]}"
-                th:text="${ordertype[1]}"
-                th:selected="${ordertype[0]} == *{orderBy}">
-          order
-        </option>
-      </select>
-      <input type="submit" value="Filtruj">
+      <fieldset>
+        <legend>Filtruj przedmioty</legend>
+        <label for="itemtype"><b>Rodzaj przedmiotu:</b></label>
+        <select name="itemtype">
+          <option th:each="type : ${itemTypes}"
+                  th:value="${type.id}"
+                  th:text="${type.typeName}"
+                  th:selected="*{itemtype} != null and ${type.id} == *{itemtype.id}">
+            itemtype
+          </option>
+          <option th:value="null" th:selected="*{itemtype} == null">Wszystkie</option>
+        </select>
+        <br />
+        <span><b>Przedział cenowy</b></span>
+        <br />
+        <label for="minPrice">Od: </label>
+        <input type="number" th:field="*{minPrice}" step="0.01" min="0">
+        <label for="maxPrice">Do: </label>
+        <input type="number" th:field="*{maxPrice}" step="0.01" min="0">
+        <br />
+        <label for="orderBy"><b>Sortowanie: </b></label>
+        <select name="orderBy">
+          <option th:each="ordertype : ${orderList}"
+                  th:value="${ordertype[0]}"
+                  th:text="${ordertype[1]}"
+                  th:selected="${ordertype[0]} == *{orderBy}">
+            order
+          </option>
+        </select>
+        <br />
+        <input type="submit" value="Filtruj">
+      </fieldset>
     </form>
     <div id="itemgrid">
       <div th:each="item : ${itemList}" class="itemcontainer">
-          <span th:text="${item.itemtype.typeName}"></span>,
-          <span th:text="${item.name}"></span>,
-          <span th:text="${item.price}"></span>
-          <a sec:authorize="isAuthenticated()" th:if="${item.available()}" th:href="@{/bookitem(id=*{id})}">Zarezerwuj</a>
+          <div class="textcontainer">
+            <div>
+            <span th:text="${item.itemtype.typeName}"></span>
+            <br>
+            <span th:text="${item.name}"></span>
+            <br>
+            <span th:text="'Cena: ' + ${item.price} + 'zł'"></span>
+            </div>
+          </div>
+          <a sec:authorize="isAuthenticated()" th:if="${item.available()}" th:href="@{/bookitem(id=${item.id})}">Zarezerwuj</a>
+          <div id="a" th:if="${!item.available()}">Zarezerwowane</div>
       </div>
 
     </div>
