@@ -15,14 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import pl.edu.ug.astokwisz.projektap.domain.Item;
-import pl.edu.ug.astokwisz.projektap.domain.ItemType;
-import pl.edu.ug.astokwisz.projektap.domain.Role;
-import pl.edu.ug.astokwisz.projektap.domain.User;
+import org.springframework.web.bind.annotation.*;
+import pl.edu.ug.astokwisz.projektap.domain.*;
 import pl.edu.ug.astokwisz.projektap.error.UserAlreadyExistsException;
 import pl.edu.ug.astokwisz.projektap.service.*;
 import pl.edu.ug.astokwisz.projektap.validator.UserEditChecks;
@@ -32,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class WebUserController {
@@ -80,9 +75,28 @@ public class WebUserController {
 
     @GetMapping("/")
     public String home(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {
+        addUserAttribute(user, model);
         List<Item> itemList = itemService.getAllItems();
         model.addAttribute("itemList", itemList);
+        List<ItemType> itemTypes = itemTypeService.getAllItemTypes();
+        model.addAttribute("itemTypes", itemTypes);
+        model.addAttribute("itemFilter", new ItemFilterForm());
+        return "itemlist";
+    }
+
+    @PostMapping("/itemfilter")
+    public String itemFilter(
+            Model model,
+            @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
+            @ModelAttribute("itemFilter") ItemFilterForm itemFilter) {
+
+        System.out.println("ITEM  FILTER: " + itemFilter);
         addUserAttribute(user, model);
+        List<Item> itemList = itemService.getFilteredItems(itemFilter);
+        model.addAttribute("itemList", itemList);
+        List<ItemType> itemTypes = itemTypeService.getAllItemTypes();
+        model.addAttribute("itemTypes", itemTypes);
+        model.addAttribute("itemFilter", itemFilter);
         return "itemlist";
     }
 
@@ -335,7 +349,8 @@ public class WebUserController {
     public String adminPageUsers(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
         addUserAttribute(authUser, model);
         List<User> userList = userService.getAllUsers();
-        model.addAttribute("userList", userList);
+        List<User> filteredList = userList.stream().filter( (User user) -> !user.getUsername().equals("admin")).toList();
+        model.addAttribute("userList", filteredList);
         return "adminpage_users";
     }
 

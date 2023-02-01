@@ -13,6 +13,19 @@
   <div id="header" th:replace="fragments/layout :: header"></div>
   <div id="menu" th:replace="fragments/layout :: menu"></div>
   <div id="content">
+    <form id="filter" th:action="@{/itemfilter}" th:object="${itemFilter}" method="post">
+      Rodzaj przedmiotu:
+      <select name="itemtype">
+        <option th:each="type : ${itemTypes}"
+                th:value="${type.id}"
+                th:text="${type.typeName}"
+                th:selected="*{itemtype} != null and ${type.id} == *{itemtype.id}">
+          itemtype
+        </option>
+        <option th:value="null" th:selected="*{itemtype} == null">Wszystkie</option>
+        <input type="submit" value="Filtruj">
+      </select>
+    </form>
     <ul th:each="item : ${itemList}">
       <li th:object="${item}">
         <span th:text="*{itemtype.typeName}"></span>,

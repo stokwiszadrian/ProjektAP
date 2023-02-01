@@ -15,6 +15,7 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 
     List<Item> findByReservedBy (User reservedBy);
 
+
 //    List<Item> FindAllByOrderByNameAsc();
 
 //    List<Item> FindByReservedby(User reservedBy);
