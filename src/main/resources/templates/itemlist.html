@@ -58,7 +58,7 @@
             <span th:text="'Cena: ' + ${item.price} + 'zł'"></span>
             </div>
           </div>
-          <a sec:authorize="isAuthenticated()" th:if="${item.available()}" th:href="@{/bookitem(id=${item.id})}">Zarezerwuj</a>
+          <a th:if="${item.available()}" th:href="@{/bookitem(id=${item.id})}">Zarezerwuj</a>
           <div id="a" th:if="${!item.available()}">Zarezerwowane</div>
       </div>
 

@@ -154,3 +154,7 @@ html, body {
     height: 2.5ex;
     font-size: 2.5ex;
 }
+
+.profile {
+    line-height: 3ex;
+}

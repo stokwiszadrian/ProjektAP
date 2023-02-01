@@ -24,14 +24,14 @@
             <span class="validationError"
                   th:if="${userExists}">Użytkownik o podanej nazwie już istnieje
     </span>
-            <br>
+            <br th:if="${isEditForm} == null">
             <input th:if="${isEditForm} == null" type="password" th:field="*{password}" placeholder="Hasło"/>
-                <br>
+                <br th:if="${isEditForm} == null">
                 <span class="validationError"
                   th:if="${#fields.hasErrors('password')}"
                   th:errors="*{password}">Błąd
     </span>
-            <br>
+            <br th:if="${isEditForm} == null">
             <input type="text" th:field="*{firstname}" placeholder="Imię"/>
                 <br>
             <span class="validationError"
@@ -102,7 +102,7 @@
                   th:errors="*{address.postalCode}">Błąd
     </span>
             <br>
-            <input type="submit" value="Zarejestruj się"/>
+            <input type="submit" th:value="${isEditForm} == null ? 'Zarejestruj się' : 'Zapisz'"/>
             </fieldset>
         </form>
     </div>

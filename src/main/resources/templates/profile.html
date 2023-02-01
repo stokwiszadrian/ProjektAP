@@ -12,37 +12,28 @@
 <div id="main">
   <div id="header" th:replace="fragments/layout :: header"></div>
   <div id="menu" th:replace="fragments/layout :: menu"></div>
-  <div id="content" th:object="${currentUser}">
+  <div id="content" th:object="${currentUser}" class="profile">
     <a th:href="@{/edituser(id=${currentUser.id})}">Edytuj profil</a>
-    <ul>
-      <li th:text="*{username}"></li>
-      <li th:text="*{firstname}"></li>
-      <li th:text="*{lastname}"></li>
-      <li th:text="*{phoneNumber}"></li>
-      <li th:text="*{pesel}"></li>
-      <li>Dane adresowe</li>
-      <li>
-        <ul>
-          <li th:text="*{address.country}"></li>
-          <li th:text="'Ul. ' + *{address.streetName} + ' ' + *{address.streetNumber} + ' , m. ' + *{address.apartmentNumber}"></li>
-          <li th:text="*{address.postalCode} + ' ' + *{address.city}"></li>
-        </ul>
-      </li>
+    <h2 th:text="*{username}"></h2>
+      <span th:text="*{firstname} + ' ' + *{lastname}"></span><br>
+      Numer telefonu: <span th:text="*{phoneNumber}"></span><br>
+      Numer PESEL: <span th:text="*{pesel}"></span><br>
+      Dane adresowe:
+      <span th:text="*{address.country}"></span>,
+      <span th:text="'ul. ' + *{address.streetName} + ' ' + *{address.streetNumber} + ' m. ' + *{address.apartmentNumber}"></span>,
+      <span th:text="*{address.postalCode} + ' ' + *{address.city}"></span>
       <br/>
-      <li>Zarezerwowane przedmioty:</li>
-      <li>
+      Zarezerwowane przedmioty:
         <ul th:each="item : *{reservedItems}">
           <li>
             <span th:text="${item.name}">name</span>,
-            <span th:text="${item.reservedFrom}"></span>,
+            <span th:text="${item.reservedFrom}"></span> -
             <span th:text="${item.reservedTo}"></span>
             <form th:action="@{/cancelreservation(id=${item.id})}" method="post">
               <input type="submit" value="Anuluj rezerwację">
             </form>
           </li>
         </ul>
-      </li>
-    </ul>
   </div>
 </div>
 </body>

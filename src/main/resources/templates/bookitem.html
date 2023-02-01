@@ -13,7 +13,7 @@
   <div id="header" th:replace="fragments/layout :: header"></div>
   <div id="menu" th:replace="fragments/layout :: menu"></div>
   <div id="content">
-    <span th:text="${errorMessage}"></span>
+    <span class="validationError" th:text="${errorMessage}"></span><br>
     Rezerwujesz <span th:text="${bookedItem.name}"></span> za <span th:text="${bookedItem.price}"></span>zł.
     <br />
     <form method="POST" th:action="@{${action}}" th:object="${bookedItem}">
