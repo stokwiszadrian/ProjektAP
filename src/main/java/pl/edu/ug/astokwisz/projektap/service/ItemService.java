@@ -1,6 +1,7 @@
 package pl.edu.ug.astokwisz.projektap.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.edu.ug.astokwisz.projektap.domain.Item;
 import pl.edu.ug.astokwisz.projektap.domain.ItemFilterForm;
@@ -31,10 +32,14 @@ public class ItemService {
     public List<Item> getItemsByItemType(ItemType itemType) { return itemRepository.findByItemtype(itemType); }
 
     public List<Item> getFilteredItems(ItemFilterForm itemFilter) {
-        if (itemFilter.getItemtype() != null) {
-            return itemRepository.findByItemtype(itemFilter.getItemtype());
-        } else {
-            return (List<Item>) itemRepository.findAll();
-        }
+        return itemRepository.findAll(hasItemtype(itemFilter.getItemtype()));
     }
+
+    static Specification<Item> hasItemtype(ItemType itemType) {
+        if (itemType != null) {
+            return (item, cq, cb) -> cb.equal(item.get("itemtype"), itemType);
+        }
+        return (item, cq, cb) -> cb.isNotNull(item.get("id"));
+    }
+
 }
