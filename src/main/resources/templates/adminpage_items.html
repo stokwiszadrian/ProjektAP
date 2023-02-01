@@ -16,13 +16,10 @@
     <a th:href="@{/adminpage/additem}">Dodaj nowy przedmiot</a>
     <ul th:each="item : ${itemList}">
       <li th:object="${item}">
-        <span th:text="*{itemtype.typeName}"></span>,
+        <span th:text="*{itemtype.typeName}"></span> -
         <span th:text="*{name}"></span>,
-        <span th:text="*{price}"></span>,
-        <span th:text="*{reservedFrom}?: 'Brak rezerwacji'"></span>,
-        <span th:text="*{reservedTo}?: 'Brak rezerwacji'"></span>,
-        <span th:text="*{reservedBy != null} ? *{reservedBy.username} : 'Brak rezerwacji'"></span>,
-        <span th:text="*{available()}"></span>
+        Cena: <span th:text="*{price}"></span>zł.
+        <span th:text="*{!available()} ? 'Zarezerwowane prez ' +  *{reservedBy.username} + ' na okres ' + *{reservedFrom} + ' - ' + *{reservedTo} : 'Brak rezerwacji'"></span>
         <form th:action="@{/adminpage/deleteitem(id=*{id})}" method="post">
           <input type="submit" value="Usuń przedmiot">
         </form>

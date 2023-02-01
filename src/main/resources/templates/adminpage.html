@@ -5,22 +5,16 @@
 >
 <head>
   <meta charset="UTF-8">
-  <title>Home</title>
+  <title>Panel administracyjny</title>
   <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <div id="main">
   <div id="header" th:replace="fragments/layout :: header"></div>
   <div id="menu" th:replace="fragments/layout :: menu"></div>
-  <div id="content">
-    <ul>
-      <li>
-        <a th:href="@{/adminpage/items}">Zarządzaj przedmiotami</a>
-      </li>
-      <li>
-        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/adminpage/users}">Zarządzaj użytkownikami</a>
-      </li>
-    </ul>
+  <div id="content" class="adminpage">
+    <a th:href="@{/adminpage/items}">Zarządzaj przedmiotami</a>
+    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/adminpage/users}">Zarządzaj użytkownikami</a>
   </div>
 </div>
 </body>

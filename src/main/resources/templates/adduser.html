@@ -14,7 +14,7 @@
     <div id="content">
         <form method="POST" th:action="@{${action}}" th:object="${userToAdd}" id="signup">
             <fieldset>
-                <legend>Rejestracja</legend>
+                <legend th:text="${isEditForm} == null ? 'Rejestracja' : 'Edytuj profil'"></legend>
             <input th:if="${isEditForm} == null" type="text" th:field="*{username}" placeholder="Nazwa użytkownika"/>
                 <br>
             <span class="validationError"

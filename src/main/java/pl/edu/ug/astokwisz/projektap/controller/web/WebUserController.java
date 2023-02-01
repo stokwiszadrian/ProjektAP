@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -317,8 +318,42 @@ public class WebUserController {
     @PostMapping("/adminpage/deleteitem")
     public String deleteItem(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser, @RequestParam String id) {
         addUserAttribute(authUser, model);
-        itemService.deleteById(Long.valueOf(id));
-        return "redirect:/adminpage/items";
+        Optional<Item> itemToDeleteOpt = itemService.getItemById(Long.valueOf(id));
+        if (itemToDeleteOpt.isPresent()) {
+            Item itemToDelete = itemToDeleteOpt.get();
+            if (itemToDelete.getReservedBy() == null) {
+                itemService.deleteById(Long.valueOf(id));
+                return "redirect:/adminpage/items";
+            }
+            else {
+                Optional<User> userToUpdateOpt = userService.getUserById(itemToDelete.getReservedBy().getId());
+                if (userToUpdateOpt.isPresent()) {
+                    User userToUpdate = userToUpdateOpt.get();
+                    List<Item> userItems = (List<Item>) userToUpdate.getReservedItems();
+                    List<Item> userUpdatedItems = userItems
+                            .stream()
+                            .filter( (Item item) -> item.getId() != Long.parseLong(id))
+                            .toList();
+                    userToUpdate.setReservedItems(userUpdatedItems);
+//                    userToUpdate.setReservedItems(
+//                            userToUpdate.getReservedItems()
+//                                    .stream()
+//                                    .filter( (Item item) -> item.getId() != Long.valueOf(id))
+//                                    .toList()
+//                    );
+                    System.out.println("IN RESERVED ITEM DELETION");
+                    System.out.println("LIST 1: " + userItems);
+                    System.out.println("LIST 2: " + userUpdatedItems);
+                    userService.updateUser(userToUpdate);
+                    itemToDelete.setReservedBy(null);
+                    itemService.updateItem(itemToDelete);
+                    itemService.deleteById(Long.valueOf(id));
+                    return "redirect:/adminpage/items";
+                }
+            }
+        }
+        model.addAttribute("errorMessage", "Przedmiot o danym ID nie istnieje.");
+        return "error";
     }
 
     @GetMapping("/adminpage/additem")
@@ -342,6 +377,7 @@ public class WebUserController {
             List<ItemType> itemTypes = itemTypeService.getAllItemTypes();
             model.addAttribute("itemTypes", itemTypes);
             model.addAttribute("action", "/adminpage/additem");
+            model.addAttribute("isEditForm", true);
             return "adminpage_itemform";
         }
         model.addAttribute("errorMessage", "Przedmiot o podanym ID nie istnieje.");

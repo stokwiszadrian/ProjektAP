@@ -149,7 +149,7 @@ html, body {
     color: red;
 }
 
-#content #signup input {
+#content #signup input, #content #itemform input, #content #itemform select {
     margin-top: 1ex;
     height: 2.5ex;
     font-size: 2.5ex;
@@ -157,4 +157,27 @@ html, body {
 
 .profile {
     line-height: 3ex;
+}
+
+.adminpage {
+    display: flex;
+}
+
+.adminpage a {
+    display: flex;
+    border: 3px solid black;
+    border-radius: 20px;
+    width: 300px;
+    height: 75px;
+    font-size: 3ex;
+    text-decoration: none;
+    background-color: rgb(230, 230, 230);;;
+    color: black;
+    align-items: center;
+    justify-content: center;
+    margin-left: 2em;
+}
+
+.adminpage a:hover {
+    background-color: rgb(200, 200, 200);
 }
