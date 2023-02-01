@@ -39,7 +39,6 @@ public class CustomSimpleUrlAuthenticationSuccessHandler implements Authenticati
     ) throws IOException {
 
         String targetUrl = determineTargetUrl(authentication);
-
         if (response.isCommitted()) {
             logger.debug(
                     "Response has already been committed. Unable to redirect to "
@@ -53,8 +52,8 @@ public class CustomSimpleUrlAuthenticationSuccessHandler implements Authenticati
     protected String determineTargetUrl(final Authentication authentication) {
 
         Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("ROLE_USER", "/home.html");
-        roleTargetUrlMap.put("ROLE_ADMIN", "/home.html");
+        roleTargetUrlMap.put("ROLE_USER", "/itemlist.html");
+        roleTargetUrlMap.put("ROLE_ADMIN", "/itemlist.html");
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
@@ -63,7 +62,6 @@ public class CustomSimpleUrlAuthenticationSuccessHandler implements Authenticati
                 return roleTargetUrlMap.get(authorityName);
             }
         }
-
         throw new IllegalStateException();
     }
 

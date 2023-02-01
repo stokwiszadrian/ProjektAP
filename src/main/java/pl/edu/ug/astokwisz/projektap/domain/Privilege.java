@@ -1,7 +1,6 @@
 package pl.edu.ug.astokwisz.projektap.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,6 @@ public class Privilege {
 
     private String name;
 
-//    @ManyToMany(mappedBy = "privileges")
     private Collection<Role> roles;
 
     public Privilege(String name) {

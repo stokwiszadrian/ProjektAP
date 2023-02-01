@@ -5,22 +5,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.validator.constraints.UniqueElements;
 import org.hibernate.validator.constraints.pl.PESEL;
-import org.springframework.core.annotation.MergedAnnotation;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import pl.edu.ug.astokwisz.projektap.annotation.PasswordValidation;
 import pl.edu.ug.astokwisz.projektap.validator.UserEditChecks;
 
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Getter

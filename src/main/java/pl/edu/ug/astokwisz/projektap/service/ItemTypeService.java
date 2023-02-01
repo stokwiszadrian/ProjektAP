@@ -2,12 +2,10 @@ package pl.edu.ug.astokwisz.projektap.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.edu.ug.astokwisz.projektap.domain.Item;
 import pl.edu.ug.astokwisz.projektap.domain.ItemType;
 import pl.edu.ug.astokwisz.projektap.repository.ItemTypeRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ItemTypeService {

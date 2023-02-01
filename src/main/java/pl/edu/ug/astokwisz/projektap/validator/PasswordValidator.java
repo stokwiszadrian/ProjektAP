@@ -18,7 +18,6 @@ public class PasswordValidator implements ConstraintValidator<PasswordValidation
         Matcher mUpperCase = upperCase.matcher(value);
         Matcher mDigits = digits.matcher(value);
         Matcher mSpecials = specials.matcher(value);
-        System.out.println(mSpecials);
         if (!mUpperCase.find()) return false;
         if (!mDigits.find()) return false;
         return mSpecials.find();

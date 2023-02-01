@@ -5,7 +5,7 @@
 >
 <head>
   <meta charset="UTF-8">
-  <title>Home</title>
+  <title>Lista przedmiotów</title>
   <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
@@ -63,18 +63,6 @@
       </div>
 
     </div>
-<!--    <ul th:each="item : ${itemList}">-->
-<!--      <li th:object="${item}">-->
-<!--        <span th:text="*{itemtype.typeName}"></span>,-->
-<!--        <span th:text="*{name}"></span>,-->
-<!--        <span th:text="*{price}"></span>,-->
-<!--&lt;!&ndash;        <span th:text="*{reservedFrom}?: 'Brak rezerwacji'"></span>,&ndash;&gt;-->
-<!--&lt;!&ndash;        <span th:text="*{reservedTo}?: 'Brak rezerwacji'"></span>,&ndash;&gt;-->
-<!--&lt;!&ndash;        <span th:text="*{reservedBy != null} ? *{reservedBy.username} : 'Brak rezerwacji'"></span>,&ndash;&gt;-->
-<!--        <span th:text="*{available()}"></span>-->
-<!--        <a sec:authorize="isAuthenticated()" th:if="*{available()}" th:href="@{/bookitem(id=*{id})}">Zarezerwuj</a>-->
-<!--      </li>-->
-<!--    </ul>-->
   </div>
 </div>
 </body>

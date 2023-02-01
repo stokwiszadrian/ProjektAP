@@ -1,6 +1,5 @@
 package pl.edu.ug.astokwisz.projektap.repository;
 
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -16,10 +15,6 @@ public interface ItemRepository extends CrudRepository<Item, Long>, JpaSpecifica
     List<Item> findByItemtype (ItemType itemtype);
 
     List<Item> findByReservedBy (User reservedBy);
-
-//    List<Item> FindAllByOrderByNameAsc();
-
-//    List<Item> FindByReservedby(User reservedBy);
 
 
 }

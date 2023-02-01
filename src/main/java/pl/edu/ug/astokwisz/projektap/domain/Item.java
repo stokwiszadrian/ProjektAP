@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
-import pl.edu.ug.astokwisz.projektap.validator.ItemReservation;
-
 import java.time.LocalDate;
 
 @Entity
@@ -24,7 +21,6 @@ public class Item {
     private String name;
     
     @NotNull
-//    @Digits(fraction = 2, message = "Cena powinna zawierać 2 miejsca po przecinku", integer = 6)
     @Min(value = 1, message = "Cena nie może być mniejsza od 1.")
     private float price;
     private LocalDate reservedFrom;
@@ -91,8 +87,4 @@ public class Item {
                 '}';
     }
 
-//    @AssertTrue(message = "Podano zły zakres", groups = ItemReservation.class)
-//    public boolean isDateRangeCorrect() {
-//        return reservedTo.isAfter(reservedFrom) || reservedTo.isEqual(reservedFrom);
-//    }
 }

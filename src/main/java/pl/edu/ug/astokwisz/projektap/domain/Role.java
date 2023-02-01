@@ -20,7 +20,6 @@ public class Role {
     private Collection<Privilege> privileges;
 
     public Role() {
-
     }
 
     public Role(String name) {

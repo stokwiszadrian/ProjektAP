@@ -3,9 +3,7 @@ package pl.edu.ug.astokwisz.projektap.component;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.edu.ug.astokwisz.projektap.domain.*;
@@ -103,8 +101,9 @@ public class SetupData implements
         ItemType type1 = new ItemType("Narty");
         ItemType type2 = new ItemType("Buty narciarskie");
         ItemType type3 = new ItemType("Kaski narciarskie");
+        ItemType type4 = new ItemType("Snowboardy");
 
-        itemTypeRepository.saveAll(List.of(type1, type2, type3));
+        itemTypeRepository.saveAll(List.of(type1, type2, type3, type4));
 
         Item nartySalomon = new Item(
               type1,
@@ -150,13 +149,11 @@ public class SetupData implements
         );
 
         itemRepository.saveAll(List.of(nartySalomon, butySalomon, kask1, kask2, narty2, narty3));
-
         alreadySetup = true;
     }
 
     @Transactional
     Privilege createPrivilegeIfNotFound(String name) {
-
         Optional<Privilege> privilege = privilegeRepository.findByName(name);
         if (privilege.isEmpty()) {
             Privilege newPrivilege = new Privilege(name);
@@ -167,15 +164,12 @@ public class SetupData implements
     }
 
     @Transactional
-    void createRoleIfNotFound(
-            String name, Collection<Privilege> privileges) {
-
+    void createRoleIfNotFound(String name, Collection<Privilege> privileges) {
         Optional<Role> role = roleRepository.findByName(name);
         if (role.isEmpty()) {
             Role newRole = new Role(name);
             newRole.setPrivileges(privileges);
             roleRepository.save(newRole);
         }
-//        role.get();
     }
 }

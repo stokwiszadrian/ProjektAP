@@ -1,16 +1,12 @@
 package pl.edu.ug.astokwisz.projektap.controller.web;
 
 import jakarta.validation.Valid;
-import jakarta.validation.Validation;
 import jakarta.validation.groups.Default;
-import org.hibernate.validator.internal.engine.groups.DefaultValidationOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +18,9 @@ import pl.edu.ug.astokwisz.projektap.error.UserAlreadyExistsException;
 import pl.edu.ug.astokwisz.projektap.service.*;
 import pl.edu.ug.astokwisz.projektap.validator.UserEditChecks;
 
-import javax.swing.text.html.Option;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class WebUserController {
@@ -97,7 +90,6 @@ public class WebUserController {
             @AuthenticationPrincipal org.springframework.security.core.userdetails.User user,
             @ModelAttribute("itemFilter") ItemFilterForm itemFilter) {
 
-        System.out.println("ITEM  FILTER: " + itemFilter);
         addUserAttribute(user, model);
         List<Item> itemList = itemService.getFilteredItems(itemFilter);
         model.addAttribute("itemList", itemList);
@@ -175,19 +167,11 @@ public class WebUserController {
         return "adduser";
     }
 
-//    @GetMapping("/error")
-//    public String errorPage(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.User user) {;
-//        addUserAttribute(user, model);
-//        return "error";
-//    }
-
     @PostMapping("/adduser")
     public String addUser(Model model, @Validated({Default.class, UserEditChecks.class}) @ModelAttribute("userToAdd") User user, Errors errors, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
         addUserAttribute(authUser, model);
         model.addAttribute("action", "/adduser");
-//        model.addAttribute("userToAdd", user);
         if (errors.hasErrors()) {
-            System.out.println("ERRORS: " + errors);
             return "adduser";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -264,12 +248,9 @@ public class WebUserController {
             model.addAttribute("action", "/edituser?id=" + id);
             model.addAttribute("isEditForm", true);
             if (errors.hasErrors()) {
-                System.out.println("ERRORS: " + errors);
                 return "adduser";
             }
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
             try {
-//                System.out.println(user);
                 userService.updateUser(user);
                 addressService.deleteAddressById(fillerUser.getAddress().getId());
                 return "redirect:/profile?id=" + id;
@@ -335,15 +316,6 @@ public class WebUserController {
                             .filter( (Item item) -> item.getId() != Long.parseLong(id))
                             .toList();
                     userToUpdate.setReservedItems(userUpdatedItems);
-//                    userToUpdate.setReservedItems(
-//                            userToUpdate.getReservedItems()
-//                                    .stream()
-//                                    .filter( (Item item) -> item.getId() != Long.valueOf(id))
-//                                    .toList()
-//                    );
-                    System.out.println("IN RESERVED ITEM DELETION");
-                    System.out.println("LIST 1: " + userItems);
-                    System.out.println("LIST 2: " + userUpdatedItems);
                     userService.updateUser(userToUpdate);
                     itemToDelete.setReservedBy(null);
                     itemService.updateItem(itemToDelete);
@@ -387,14 +359,12 @@ public class WebUserController {
     @PostMapping("/adminpage/additem")
     public String addItem(Model model, @Valid @ModelAttribute("itemToAdd") Item item, Errors errors, @AuthenticationPrincipal org.springframework.security.core.userdetails.User authUser) {
         addUserAttribute(authUser, model);
-        System.out.println(item);
         if (errors.hasErrors()) {
             model.addAttribute("action", "/adminpage/additem");
             List<ItemType> itemTypes = itemTypeService.getAllItemTypes();
             model.addAttribute("itemTypes", itemTypes);
             return "adminpage_itemform";
         }
-//        item.setId(Long.valueOf());
         itemService.updateItem(item);
         return "redirect:/adminpage/items";
 

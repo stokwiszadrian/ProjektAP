@@ -34,7 +34,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         User foundUser = user.get();
-        System.out.println(foundUser.getUsername() + " " + foundUser.getPassword());
         return new org.springframework.security.core.userdetails.User(
                 foundUser.getUsername(), foundUser.getPassword(), true, true, true,
                 true, getAuthorities(foundUser.getRoles()));

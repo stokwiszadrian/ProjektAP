@@ -1,6 +1,5 @@
 package pl.edu.ug.astokwisz.projektap.domain;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
