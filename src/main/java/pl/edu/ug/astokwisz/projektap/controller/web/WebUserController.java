@@ -81,6 +81,12 @@ public class WebUserController {
         List<ItemType> itemTypes = itemTypeService.getAllItemTypes();
         model.addAttribute("itemTypes", itemTypes);
         model.addAttribute("itemFilter", new ItemFilterForm());
+        model.addAttribute("orderList", List.of(
+           List.of("nameAsc", "Nazwa A-Z"),
+                List.of("nameDesc", "Nazwa Z-A"),
+                List.of("priceAsc", "Cena - rosnąco"),
+                List.of("priceDesc", "Cena - malejąco")
+        ));
         return "itemlist";
     }
 
@@ -97,6 +103,12 @@ public class WebUserController {
         List<ItemType> itemTypes = itemTypeService.getAllItemTypes();
         model.addAttribute("itemTypes", itemTypes);
         model.addAttribute("itemFilter", itemFilter);
+        model.addAttribute("orderList", List.of(
+                List.of("nameAsc", "Nazwa A-Z"),
+                List.of("nameDesc", "Nazwa Z-A"),
+                List.of("priceAsc", "Cena - rosnąco"),
+                List.of("priceDesc", "Cena - malejąco")
+        ));
         return "itemlist";
     }
 

@@ -23,8 +23,21 @@
           itemtype
         </option>
         <option th:value="null" th:selected="*{itemtype} == null">Wszystkie</option>
-        <input type="submit" value="Filtruj">
       </select>
+      <span>Przedział cenowy</span>
+      <label for="minPrice">Od:</label>
+      <input type="number" th:field="*{minPrice}" step="0.01" min="0">
+      <label for="maxPrice">Do:</label>
+      <input type="number" th:field="*{maxPrice}" step="0.01" min="0">
+      <select name="orderBy">
+        <option th:each="ordertype : ${orderList}"
+                th:value="${ordertype[0]}"
+                th:text="${ordertype[1]}"
+                th:selected="${ordertype[0]} == *{orderBy}">
+          order
+        </option>
+      </select>
+      <input type="submit" value="Filtruj">
     </form>
     <ul th:each="item : ${itemList}">
       <li th:object="${item}">

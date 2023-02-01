@@ -32,7 +32,14 @@ public class ItemService {
     public List<Item> getItemsByItemType(ItemType itemType) { return itemRepository.findByItemtype(itemType); }
 
     public List<Item> getFilteredItems(ItemFilterForm itemFilter) {
-        return itemRepository.findAll(hasItemtype(itemFilter.getItemtype()));
+        return itemRepository
+                .findAll(
+                        hasItemtype(itemFilter.getItemtype())
+                                .and(priceGreaterThan(itemFilter.getMinPrice()))
+                                .and(priceLessThan(itemFilter.getMaxPrice()))
+                                .and(orderBy(itemFilter.getOrderBy()))
+
+                );
     }
 
     static Specification<Item> hasItemtype(ItemType itemType) {
@@ -40,6 +47,55 @@ public class ItemService {
             return (item, cq, cb) -> cb.equal(item.get("itemtype"), itemType);
         }
         return (item, cq, cb) -> cb.isNotNull(item.get("id"));
+    }
+
+    static Specification<Item> priceGreaterThan(Float minPrice) {
+        if (minPrice != null) {
+            return (item, cq, cb) -> cb.ge(item.get("price"), minPrice);
+        }
+        return (item, cq, cb) -> cb.isNotNull(item.get("id"));
+    }
+
+    static Specification<Item> priceLessThan(Float maxPrice) {
+        if (maxPrice != null) {
+            return (item, cq, cb) -> cb.le(item.get("price"), maxPrice);
+        }
+        return (item, cq, cb) -> cb.isNotNull(item.get("id"));
+    }
+
+    static Specification<Item> orderBy(String orderBy) {
+        switch (orderBy) {
+            case "nameAsc":
+                return (item, cq, cb) -> {
+                    cq.orderBy(cb.asc(item.get("name")));
+                    return cb.isNotNull(item.get("id"));
+            };
+
+            case "nameDesc":
+                return (item, cq, cb) -> {
+                    cq.orderBy(cb.desc(item.get("name")));
+                    return cb.isNotNull(item.get("id"));
+                };
+
+            case "priceAsc":
+                return (item, cq, cb) -> {
+                    cq.orderBy(cb.asc(item.get("price")));
+                    return cb.isNotNull(item.get("id"));
+                };
+
+            case "priceDesc":
+                return (item, cq, cb) -> {
+                    cq.orderBy(cb.desc(item.get("price")));
+                    return cb.isNotNull(item.get("id"));
+                };
+
+            default: {
+                return (item, cq, cb) -> {
+                    cq.orderBy(cb.asc(item.get("name")));
+                    return cb.isNotNull(item.get("id"));
+                };
+            }
+        }
     }
 
 }

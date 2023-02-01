@@ -115,7 +115,7 @@ public class SetupData implements
         Item butySalomon = new Item(
                 type2,
                 "Buty narciarskie Salomon S-Pro 100 20/21",
-                120.00F,
+                90.00F,
                 LocalDate.of(2022, 2, 11),
                 LocalDate.of(2023, 2, 18),
                 defaultUser
