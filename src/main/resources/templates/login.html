@@ -5,7 +5,7 @@
 >
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Logowanie</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
@@ -15,22 +15,22 @@
     <div id="content">
         <form name="f" th:action="@{/login}" method="post">
             <fieldset>
-                <legend>Please Login</legend>
+                <legend>Zaloguj się</legend>
                 <div th:if="${param.error}" class="alert alert-error">
-                    Invalid username and password.
+                    Niepoprawna nazwa użytkownika lub hasło.
                 </div>
                 <div th:if="${param.logout}" class="alert alert-success">
-                    You have been logged out.
+                    Zostałeś wylogowany.
                 </div>
                 <div th:if="${param.continue}" class="alert alert-success">
-                    You have been logged in.
+                    Zostałeś zalogowany.
                 </div>
-                <label for="username">Username</label>
+                <label for="username">Nazwa użytkownika</label>
                 <input type="text" id="username" name="username"/>
-                <label for="password">Password</label>
+                <label for="password">Hasło</label>
                 <input type="password" id="password" name="password"/>
                 <div class="form-actions">
-                    <button type="submit" class="btn">Log in</button>
+                    <button type="submit" class="btn">Zaloguj się</button>
                 </div>
             </fieldset>
         </form>

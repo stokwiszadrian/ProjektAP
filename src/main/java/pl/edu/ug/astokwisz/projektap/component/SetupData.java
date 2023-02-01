@@ -122,7 +122,34 @@ public class SetupData implements
 
         );
 
-        itemRepository.saveAll(List.of(nartySalomon, butySalomon));
+        Item kask1 = new Item(
+                type3,
+                "kask123",
+                40.00F
+        );
+
+        Item kask2 = new Item(
+                type3,
+                "lepszy kask",
+                60.00F
+        );
+
+        Item narty2 = new Item(
+                type1,
+                "meganarty",
+                150.00F
+        );
+
+        Item narty3 = new Item(
+                type1,
+                "meganarciska",
+                200.00F,
+                LocalDate.of(2022, 2, 11),
+                LocalDate.of(2023, 2, 18),
+                defaultUser
+        );
+
+        itemRepository.saveAll(List.of(nartySalomon, butySalomon, kask1, kask2, narty2, narty3));
 
         alreadySetup = true;
     }

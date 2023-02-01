@@ -30,7 +30,7 @@
         <option th:each="type : ${itemTypes}"
                 th:value="${type.id}"
                 th:text="${type.typeName}"
-                th:selected="(${type.id} == *{itemtype.id})">
+                th:selected="*{itemtype} != null and ${type.id} == *{itemtype.id}">
           itemtype
         </option>
       </select>

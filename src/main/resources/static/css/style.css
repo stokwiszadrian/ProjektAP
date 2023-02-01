@@ -1,29 +1,102 @@
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%;
+    /* height: 100%; */
+    background-color: rgb(230, 230, 230);;
 }
 
 #main {
-    background-color: sandybrown;
+    /* background-color: rgb(28, 145, 255);
     display: flex;
     width: 100%;
     height: 100%;
-    flex-wrap: wrap;
+    flex-wrap: wrap; */
 }
 
 #header {
+    background-color: rgb(28, 145, 255);
     width: 100%;
-    height: 15%;
+    height: 12ex;
+    position: fixed;
+    top: 0;
+    overflow: hidden;
 }
 
 #menu {
+    background-color: rgb(230, 230, 230);
     width: 15%;
-    height: 85%;
+    height: 65%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    position: fixed;
+    left: 0;
+    top: 12ex;
+    overflow: hidden;
+}
+
+#menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#menu ul li {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 3ex;
+    color: black;
+}
+
+#menu a {
+    padding-top: 1.5ex;
+    padding-bottom: 1.5ex;
+    color: black;
+    display: block;
+    width: 100%;
+    text-decoration: none;
+}
+
+#menu a:hover, #menu input:hover {
+    background-color: rgb(200, 200, 200);;
+}
+
+#menu input {
+     background-color: rgb(230, 230, 230);
+     border: none;
+     padding-top: 1.5ex;
+     padding-bottom: 1.5ex;
+     width: 100%;
+     height: 100%;
+     font-size: 2ex;
+     display: inline-block;
+     cursor: pointer;
+     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 #content {
-    background-color: wheat;
-    width: 85%;
-    height: 85%;
+    margin-top: 12ex;
+    margin-left: 15%;
+    padding: 2%;
+    background-color: snow;
+    /* border: 2px solid black; */
+    min-height: 81.5vh;
+    /* height: auto; */
+}
+
+#content #itemgrid {
+    display: flex;
+    /* grid-template-columns: repeat(3, 1fr); */
+    /* grid-template-rows: repeat(5, 1fr); */
+    gap: 20px 20px;
+    width: 100%;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+#content #itemgrid .itemcontainer {
+    border: 1px solid red;
+    justify-self: stretch;
+    width: 400px;
+    height: 600px;
 }

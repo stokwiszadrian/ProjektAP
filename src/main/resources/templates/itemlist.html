@@ -39,18 +39,27 @@
       </select>
       <input type="submit" value="Filtruj">
     </form>
-    <ul th:each="item : ${itemList}">
-      <li th:object="${item}">
-        <span th:text="*{itemtype.typeName}"></span>,
-        <span th:text="*{name}"></span>,
-        <span th:text="*{price}"></span>,
-        <span th:text="*{reservedFrom}?: 'Brak rezerwacji'"></span>,
-        <span th:text="*{reservedTo}?: 'Brak rezerwacji'"></span>,
-        <span th:text="*{reservedBy != null} ? *{reservedBy.username} : 'Brak rezerwacji'"></span>,
-        <span th:text="*{available()}"></span>
-        <a sec:authorize="isAuthenticated()" th:if="*{available()}" th:href="@{/bookitem(id=*{id})}">Zarezerwuj</a>
-      </li>
-    </ul>
+    <div id="itemgrid">
+      <div th:each="item : ${itemList}" class="itemcontainer">
+          <span th:text="${item.itemtype.typeName}"></span>,
+          <span th:text="${item.name}"></span>,
+          <span th:text="${item.price}"></span>
+          <a sec:authorize="isAuthenticated()" th:if="${item.available()}" th:href="@{/bookitem(id=*{id})}">Zarezerwuj</a>
+      </div>
+
+    </div>
+<!--    <ul th:each="item : ${itemList}">-->
+<!--      <li th:object="${item}">-->
+<!--        <span th:text="*{itemtype.typeName}"></span>,-->
+<!--        <span th:text="*{name}"></span>,-->
+<!--        <span th:text="*{price}"></span>,-->
+<!--&lt;!&ndash;        <span th:text="*{reservedFrom}?: 'Brak rezerwacji'"></span>,&ndash;&gt;-->
+<!--&lt;!&ndash;        <span th:text="*{reservedTo}?: 'Brak rezerwacji'"></span>,&ndash;&gt;-->
+<!--&lt;!&ndash;        <span th:text="*{reservedBy != null} ? *{reservedBy.username} : 'Brak rezerwacji'"></span>,&ndash;&gt;-->
+<!--        <span th:text="*{available()}"></span>-->
+<!--        <a sec:authorize="isAuthenticated()" th:if="*{available()}" th:href="@{/bookitem(id=*{id})}">Zarezerwuj</a>-->
+<!--      </li>-->
+<!--    </ul>-->
   </div>
 </div>
 </body>
