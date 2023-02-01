@@ -140,3 +140,17 @@ html, body {
 #content #filter {
     margin-bottom:  5ex;
 }
+
+/* #content #signup {
+
+} */
+
+.validationError {
+    color: red;
+}
+
+#content #signup input {
+    margin-top: 1ex;
+    height: 2.5ex;
+    font-size: 2.5ex;
+}

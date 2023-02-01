@@ -25,11 +25,13 @@ public class Address {
     @Size(min = 1, message = "Pole wymagane", groups = UserEditChecks.class)
     @Pattern(regexp = "^[\\p{L}0-9][\\p{L}\s]+$", message = "Niepoprawne dane", groups = UserEditChecks.class)
     private String streetName;
+    @Size(min = 1, message = "Pole wymagane", groups = UserEditChecks.class)
     @Pattern(regexp = "^[\\p{L}0-9\s]+$", message = "Niepoprawne dane", groups = UserEditChecks.class)
     private String streetNumber;
 
     @Pattern(regexp = "^[0-9]{1,6}$|", message = "Niepoprawne dane", groups = UserEditChecks.class)
     private String apartmentNumber;
+    @Size(min = 1, message = "Pole wymagane", groups = UserEditChecks.class)
     @Pattern(regexp = "^[0-9]{2}-[0-9]{3}$", message = "Niepoprawne dane", groups = UserEditChecks.class)
     private String postalCode;
 

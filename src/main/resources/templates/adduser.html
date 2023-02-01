@@ -12,14 +12,11 @@
     <div id="header" th:replace="fragments/layout :: header"></div>
     <div id="menu" th:replace="fragments/layout :: menu"></div>
     <div id="content">
-        <form method="POST" th:action="@{${action}}" th:object="${userToAdd}">
-            <div th:if="${#fields.hasErrors()}">
-        <span class="validationError">
-        Błędy formularza.
-        </span>
-            </div>
-            <label th:if="${isEditForm} == null" for="username">Nazwa użytkownika: </label>
-            <input th:if="${isEditForm} == null" type="text" th:field="*{username}"/>
+        <form method="POST" th:action="@{${action}}" th:object="${userToAdd}" id="signup">
+            <fieldset>
+                <legend>Rejestracja</legend>
+            <input th:if="${isEditForm} == null" type="text" th:field="*{username}" placeholder="Nazwa użytkownika"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('username')}"
                   th:errors="*{username}">Błąd
@@ -28,84 +25,85 @@
                   th:if="${userExists}">Użytkownik o podanej nazwie już istnieje
     </span>
             <br>
-            <label th:if="${isEditForm} == null" for="password">Hasło: </label>
-            <input th:if="${isEditForm} == null" type="password" th:field="*{password}"/>
-            <span class="validationError"
+            <input th:if="${isEditForm} == null" type="password" th:field="*{password}" placeholder="Hasło"/>
+                <br>
+                <span class="validationError"
                   th:if="${#fields.hasErrors('password')}"
                   th:errors="*{password}">Błąd
     </span>
             <br>
-            <label for="firstname">Imię: </label>
-            <input type="text" th:field="*{firstname}"/>
+            <input type="text" th:field="*{firstname}" placeholder="Imię"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('firstname')}"
                   th:errors="*{firstname}">Błąd
     </span>
             <br>
-            <label for="lastname">Nazwisko: </label>
-            <input type="text" th:field="*{lastname}"/>
+            <input type="text" th:field="*{lastname}" placeholder="Nazwisko"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('lastname')}"
                   th:errors="*{lastname}">Błąd
     </span>
             <br>
-            <label for="phoneNumber">Numer telefonu: </label>
-            <input type="text" th:field="*{phoneNumber}"/>
+            <input type="text" th:field="*{phoneNumber}" placeholder="Numer telefonu"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('phoneNumber')}"
                   th:errors="*{phoneNumber}">Błąd
     </span>
             <br>
-            <label for="pesel">Numer PESEL: </label>
-            <input type="text" th:field="*{pesel}"/>
+                <input type="text" th:field="*{pesel}" placeholder="PESEL"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('pesel')}"
                   th:errors="*{pesel}">Błąd
     </span>
             <br>
-            <label for="address-country">Kraj: </label>
-            <input type="text" th:field="*{address.country}"/>
+            <input type="text" th:field="*{address.country}" placeholder="Kraj"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('address.country')}"
                   th:errors="*{address.country}">Błąd
     </span>
             <br>
-            <label for="address-city">Miejscowość: </label>
-            <input type="text" th:field="*{address.city}"/>
+            <input type="text" th:field="*{address.city}" placeholder="Miejscowość"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('address.city')}"
                   th:errors="*{address.city}">Błąd
     </span>
             <br>
-            <label for="address-streetName">Ulica: </label>
-            <input type="text" th:field="*{address.streetName}"/>
+            <input type="text" th:field="*{address.streetName}" placeholder="Ulica"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('address.streetName')}"
                   th:errors="*{address.streetName}">Błąd
     </span>
             <br>
-            <label for="address-streetNumber">Numer ulicy: </label>
-            <input type="text" th:field="*{address.streetNumber}"/>
+            <input type="text" th:field="*{address.streetNumber}" placeholder="Numer ulicy"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('address.streetNumber')}"
                   th:errors="*{address.streetNumber}">Błąd
     </span>
             <br>
-            <label for="address-apartmentNumber">Numer mieszkania: </label>
-            <input type="text" th:field="*{address.apartmentNumber}"/>
+            <input type="text" th:field="*{address.apartmentNumber}" placeholder="Numer mieszkania (opcjonalne)"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('address.apartmentNumber')}"
                   th:errors="*{address.apartmentNumber}">Błąd
     </span>
             <br>
-            <label for="address-postalCode">Kod pocztowy: </label>
-            <input type="text" th:field="*{address.postalCode}"/>
+            <input type="text" th:field="*{address.postalCode}" placeholder="Kod pocztowy"/>
+                <br>
             <span class="validationError"
                   th:if="${#fields.hasErrors('address.postalCode')}"
                   th:errors="*{address.postalCode}">Błąd
     </span>
             <br>
-            <input type="submit" value="Submit"/>
+            <input type="submit" value="Zarejestruj się"/>
+            </fieldset>
         </form>
     </div>
 </div>
